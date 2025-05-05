@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="./index.ts" type="module"></script>
+  </head>
+  <body>
+    <div>
+        <label>
+            Base URL:
+            <input id="base-url" type="text" autocapitalize="off" autocomplete="off" />
+        </label>
+        <label>
+            API key:
+            <input id="api-key" type="password" />
+        </label>
+        <label>
+            Model name:
+            <input id="model-name" type="text" autocapitalize="off" autocomplete="off" />
+        </label>
+    </div>
+    <hr />
+    <div>
+        <label>
+            Prompt:
+            <textarea id="prompt"></textarea>
+        </label>
+        <label>
+            Prefill:
+            <textarea id="prefill"></textarea>
+        </label>
+        <button id="run">Run</button>
+    </div>
+    <hr />
+    <div id="tree-container"></div>
+  </body>
+</html>
