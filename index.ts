@@ -61,7 +61,7 @@ function renderTree(roots: Token[]) {
     const text = node.text.replace("<", "&lt;").replace(">", "&gt;").replace(" ", "␣").replace("\n", "↵");
     const children = node.children.map(renderNode).join("");
     const [s, s1] = node.children.length ? ["<strong>", "</strong>"] : ["", ""];
-    const end = node.branchFinished && node.children.length === 0 ? "<|endoftext|>" : "";
+    const end = node.branchFinished != null && node.children.length === 0 ? `<|${node.branchFinished}|>` : "";
     return `
       <li>
         <div>
