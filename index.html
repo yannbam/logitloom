@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script src="./index.ts" type="module"></script>
+    <script src="./index.tsx" type="module"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -12,12 +12,65 @@
             display: none !important;
         }
 
+        .settings-container {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: flex-start;
+            gap: 0.75rem;
+        }
+
+        .settings-container>label {
+            flex: 1 1 auto;
+            /* min-width: 10rem; */
+        }
+
+        .settings-container>label {
+            display: flex;
+            flex-flow: row nowrap;
+            gap: 0.25rem;
+
+        }
+
+        .settings-container>label>span {
+            text-wrap: nowrap;
+            font-size: 80%;
+        }
+
+        .settings-container>label> :is(textarea, input) {
+            flex: 1 1 auto;
+        }
+
+        .settings-container>label:has(input) {
+            max-width: fit-content;
+            /* min-width: 10em; */
+        }
+
+        .settings-container>label>input {
+            max-height: 2em;
+        }
+
+        .settings-container>label>input[type=number] {
+            max-width: 4em;
+            min-width: 4em;
+        }
+
+
         li {
             position: relative;
             margin-top: 10px;
         }
 
-        li:not(:last-of-type):has(ol)::before {
+        li.has-left-line::before {
+            content: '';
+            position: absolute;
+            left: -3.5em;
+            right: calc(100% + 1.5em);
+            top: 0.5em;
+            bottom: 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.25);
+        }
+
+        li.has-down-line>ol::before {
             content: '';
             position: absolute;
             top: 1.5em;
@@ -26,9 +79,20 @@
             border-left: 1px solid black;
         }
 
+        li.has-short-down-line>ol::before {
+            bottom: calc(100% - 2.31em);
+        }
+
         li span.token {
             font-family: monospace;
             background-color: rgb(231, 231, 231);
+            border: 1px solid black;
+            padding: 2px 4px;
+            border-radius: 5px;
+        }
+
+        li span.token-utf8 {
+            font-size: 70%;
             border: 1px solid black;
             padding: 2px 4px;
             border-radius: 5px;
@@ -44,7 +108,7 @@
         }
 
         li:hover {
-            color: red;
+            color: rgb(39, 128, 22);
         }
 
         li>div:hover button.add-prefill {
@@ -84,183 +148,7 @@
 </head>
 
 <body>
-    <div>
-        <label>
-            Base URL:
-            <input id="base-url" type="text" autocapitalize="off" autocomplete="off" />
-        </label>
-        <label>
-            API key:
-            <input id="api-key" type="password" />
-        </label>
-        <label>
-            Model name:
-            <input id="model-name" type="text" autocapitalize="off" autocomplete="off" />
-        </label>
-    </div>
-    <hr />
-    <div>
-        <label>
-            Prompt:
-            <textarea id="prompt"></textarea>
-        </label>
-        <label>
-            Prefill:
-            <textarea id="prefill"></textarea>
-        </label>
-    </div>
-    <hr />
-    <div>
-        <label>
-            Depth:
-            <input id="depth" type="number" min="1" max="100" value="5" />
-            <abbr title="Expand this many tokens deep."><small>(?)</small></abbr>
-        </label>
-        <label>
-            Max children:
-            <input id="max-width" type="number" min="1" max="100" value="5" />
-            <abbr title="Expand up to this many child tokens."><small>(?)</small></abbr>
-        </label>
-        <label>
-            Probability threshold:
-            <input id="cover-prob" type="number" min="0" max="100" step="5" value="80" />
-            <abbr
-                title="Expand children until the cumulative probability reaches this value, or max children."><small>(?)</small></abbr>
-        </label>
-        <button id="run">Run</button>
-        <div class="spinner" hidden></div>
-    </div>
-    <hr />
-    <div id="tree-container">
-        <ol>
-            <li>
-                <div>
-                    <span class="token"><strong>␣comparing</strong></span>
-                    <span class="prob">(100.00%)</span>
-                    <span class="extra">[0.0000] </span>
-                    <button class="add-prefill" data-uuid="6d2322fc-2a04-434c-9455-996e96206386"
-                        title="Add to prefill">📥</button>
-                </div>
-                <ol>
-                    <li>
-                        <div>
-                            <span class="token"><strong>:↵</strong></span>
-                            <span class="prob">(99.98%)</span>
-                            <span class="extra">[-0.0002] </span>
-                            <button class="add-prefill" data-uuid="9e8f06f9-1d5f-4990-abbd-6a98f9643a75"
-                                title="Add to prefill">📥</button>
-                        </div>
-                        <ol>
-                            <li>
-                                <div>
-                                    <span class="token"><strong>-</strong></span>
-                                    <span class="prob">(99.86%)</span>
-                                    <span class="extra">[-0.0014] </span>
-                                    <button class="add-prefill" data-uuid="4e9bcb23-a133-416b-971a-8cef63bc65c5"
-                                        title="Add to prefill">📥</button>
-                                </div>
-                                <ol>
-                                    <li>
-                                        <div>
-                                            <span class="token"><strong>␣**</strong></span>
-                                            <span class="prob">(88.84%)</span>
-                                            <span class="extra">[-0.1183] </span>
-                                            <button class="add-prefill" data-uuid="90c1602b-63c4-40f5-a904-865064d961df"
-                                                title="Add to prefill">📥</button>
-                                        </div>
-                                        <ol>
-                                            <li>
-                                                <div>
-                                                    <span class="token"><strong>9</strong></span>
-                                                    <span class="prob">(100.00%)</span>
-                                                    <span class="extra">[0.0000] </span>
-                                                    <button class="add-prefill"
-                                                        data-uuid="0909c3b3-f3cf-4a5f-b449-ee23cf8ca65f"
-                                                        title="Add to prefill">📥</button>
-                                                </div>
-                                                <ol>
-                                                    <li>
-                                                        <div>
-                                                            <span class="token"><strong>.</strong></span>
-                                                            <span class="prob">(100.00%)</span>
-                                                            <span class="extra">[0.0000] </span>
-                                                            <button class="add-prefill"
-                                                                data-uuid="04846248-99e5-4b14-b7e1-7d7fe0a49113"
-                                                                title="Add to prefill">📥</button>
-                                                        </div>
-                                                        <ol>
-                                                            <li>
-                                                                <div>
-                                                                    <span class="token">9</span>
-                                                                    <span class="prob">(100.00%)</span>
-                                                                    <span class="extra">[0.0000] </span>
-                                                                    <button class="add-prefill"
-                                                                        data-uuid="db725213-5106-441c-b079-3611401cab4d"
-                                                                        title="Add to prefill">📥</button>
-                                                                </div>
-
-                                                            </li>
-                                                        </ol>
-                                                    </li>
-                                                </ol>
-                                            </li>
-                                        </ol>
-                                    </li>
-
-                                    <li>
-                                        <div>
-                                            <span class="token"><strong>␣</strong></span>
-                                            <span class="prob">(11.16%)</span>
-                                            <span class="extra">[-2.1930] </span>
-                                            <button class="add-prefill" data-uuid="88df0ac6-c182-4168-b1b1-8688187d2a1b"
-                                                title="Add to prefill">📥</button>
-                                        </div>
-                                        <ol>
-                                            <li>
-                                                <div>
-                                                    <span class="token"><strong>9</strong></span>
-                                                    <span class="prob">(100.00%)</span>
-                                                    <span class="extra">[0.0000] </span>
-                                                    <button class="add-prefill"
-                                                        data-uuid="5fd8fffa-37a5-419f-8d54-cef1a4937ccb"
-                                                        title="Add to prefill">📥</button>
-                                                </div>
-                                                <ol>
-                                                    <li>
-                                                        <div>
-                                                            <span class="token"><strong>.</strong></span>
-                                                            <span class="prob">(100.00%)</span>
-                                                            <span class="extra">[0.0000] </span>
-                                                            <button class="add-prefill"
-                                                                data-uuid="fb7bc79a-ec3b-4586-91b4-dc9b4f0ec0cc"
-                                                                title="Add to prefill">📥</button>
-                                                        </div>
-                                                        <ol>
-                                                            <li>
-                                                                <div>
-                                                                    <span class="token">9</span>
-                                                                    <span class="prob">(100.00%)</span>
-                                                                    <span class="extra">[0.0000] </span>
-                                                                    <button class="add-prefill"
-                                                                        data-uuid="3bed9f95-4429-4375-9380-844ef8b0d5c6"
-                                                                        title="Add to prefill">📥</button>
-                                                                </div>
-
-                                                            </li>
-                                                        </ol>
-                                                    </li>
-                                                </ol>
-                                            </li>
-                                        </ol>
-                                    </li>
-                                </ol>
-                            </li>
-                        </ol>
-                    </li>
-                </ol>
-            </li>
-        </ol>
-    </div>
+    <div id="app"></div>
 </body>
 
 </html>

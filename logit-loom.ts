@@ -15,19 +15,21 @@ export interface Token {
 export interface TreeOptions {
   client: InstanceType<typeof OpenAI>;
   model: string;
-  prompt: string;
+  prompt?: string;
   prefill?: string;
   depth: number;
   maxWidth: number;
   coverProb: number;
-  progress: (tokens: Token[]) => void;
+  progress: (tokens: Token[]) => boolean;
 }
 
 export async function buildTree(opts: TreeOptions): Promise<Token[]> {
   const roots: Token[] = [];
   appendTokens(roots, await query([], opts));
   console.log("roots", roots);
-  opts.progress(roots);
+  if (opts.progress(structuredClone(roots))) {
+    return roots; // interrupt
+  }
 
   // repeatedly walk the tree until there are no nodes left to expand
   while (true) {
@@ -36,9 +38,24 @@ export async function buildTree(opts: TreeOptions): Promise<Token[]> {
       break;
     }
     appendTokens(prefix.at(-1)!, await query(prefix, opts));
-    opts.progress(roots);
+    if (opts.progress(structuredClone(roots))) {
+      return roots; // interrupt
+    }
   }
   return roots;
+}
+
+export function pathToNodeWithId(id: string, roots: Token[]): Token[] | null {
+  for (let root of roots) {
+    for (let traversal of _treeTraversals(root)) {
+      const idx = traversal.findIndex(t => t.id === id);
+      if (idx === -1) {
+        continue;
+      }
+      return traversal.slice(0, idx + 1);
+    }
+  }
+  return null;
 }
 
 type BranchFinishReason = "stop" | "content_filter" | "tool_calls" | "function_call";
@@ -58,7 +75,7 @@ type QueriedLogprobs =
       finishReason: BranchFinishReason;
     };
 async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprobs> {
-  const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt }];
+  const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt ?? "" }];
   if ((opts.prefill != null && opts.prefill.length > 0) || tokens.length > 0) {
     messages.push({
       role: "assistant",
@@ -92,11 +109,17 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
   }
   const logprobs = choice.logprobs?.content;
   if (logprobs == null) {
-    if (choice.finish_reason != "length") {
+    if (choice.finish_reason != null && choice.finish_reason !== "length") {
       // stopped because this branch is over
       return { kind: "finish", finishReason: choice.finish_reason };
+    } else if (choice.finish_reason === "length") {
+      // TODO: sometimes can happen even though we count tokens, not sure why
+      // seems to happen at natural endpoints, so count it as a stop for now
+      console.warn("unexpected finish_reason=length!");
+      return { kind: "finish", finishReason: "stop" };
+    } else {
+      throw new Error("response missing logprobs!");
     }
-    throw new Error("response missing logprobs!");
   }
   return {
     kind: "logprobs",
