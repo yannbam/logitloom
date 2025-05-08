@@ -54,7 +54,7 @@ Currently unlicensed. TODO.
 
 ## Development
 
-Uses [Bun](bun.sh) for bundling and serving in development.
+Uses [Bun](https://bun.sh) for bundling and serving in development.
 
 * Serve dev: `bun --hot index.html`
     * Due to a Bun bug, you will need a recent browser, such as Firefox 138. https://github.com/oven-sh/bun/pull/19469
