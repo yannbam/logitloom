@@ -23,4 +23,4 @@ fi
 # trailing slash on dist/ important! copy contents instead of folder
 rsync -av --delete dist/ "$DEPLOY_PATH"
 
-echo "Copied, remember to run `make build && make deploy` in the blog-vgel directory."
+echo "Copied, remember to run make build && make deploy in the blog-vgel directory."
