@@ -1,4 +1,12 @@
-import type { ChatCompletionMessageParam, ChatCompletionTokenLogprob } from "openai/resources/index.mjs";
+import type {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming,
+  ChatCompletionMessageParam,
+  ChatCompletionTokenLogprob,
+  Completion,
+  CompletionChoice,
+  CompletionCreateParamsNonStreaming,
+} from "openai/resources/index.mjs";
 import OpenAI from "./openai";
 import * as uuid from "uuid";
 
@@ -14,8 +22,9 @@ export interface Token {
 
 export interface TreeOptions {
   client: InstanceType<typeof OpenAI>;
-  baseUrl: string,
+  baseUrl: string;
   model: string;
+  modelType: "chat" | "base";
   prompt?: string;
   prefill?: string;
   depth: number;
@@ -57,7 +66,10 @@ export async function expandTree(opts: TreeOptions, roots: Token[], id: string):
   }
   const node = nodePath.at(-1)!;
   node.children = [];
-  const extraPrefill = nodePath.slice(0, -1).map(t => t.text).join("");
+  const extraPrefill = nodePath
+    .slice(0, -1)
+    .map((t) => t.text)
+    .join("");
   console.log(node, extraPrefill, node.text);
 
   while (true) {
@@ -91,12 +103,12 @@ type BranchFinishReason = "stop" | "content_filter" | "tool_calls" | "function_c
 type QueriedLogprobs =
   | {
       kind: "logprobs";
-      logprobs: Array<{
-        chosenToken: string;
-        /** If non-null, the **chosen** token branch is finished. (But other branches discovered here might be alive.) */
-        finishReason: BranchFinishReason | null;
-        topLogprobs: ChatCompletionTokenLogprob.TopLogprob[];
-      }>;
+      logprobs: Array<
+        TokenLogprobs & {
+          /** If non-null, the **chosen** token branch is finished. (But other branches discovered here might be alive.) */
+          finishReason: BranchFinishReason | null;
+        }
+      >;
     }
   | {
       /** The entire branch you tried to query is finished. */
@@ -104,49 +116,62 @@ type QueriedLogprobs =
       finishReason: BranchFinishReason;
     };
 async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprobs> {
-  const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt ?? "" }];
-  // TODO this is giga-broken for byte tokens with invalid unicode
+  // TODO prompt concat is giga-broken for byte tokens with invalid unicode
   //
-  // deepseek handles these with the very elegant solution of escaping them to \xaa\xbb and then sticking the bytes in a
+  // chat completions handles this with the Very Elegant solution of escaping them to \xaa\xbb and then sticking the bytes in a
   // `bytes` field on the logprob (as a list of integers)
   // we just naively take the text and then pass escapes into the model, which causes it to generate more escapes and
   // quickly enter byte-escapes-fucksville
+  //
+  // (regular completions doesn't handle this at all because fuck you)
+  //
   // the problem is we can't work with the tokens one-by-one to turn the bytes into text because they are invalid unicode
   // on their own (e.g. \x20\xf0\x9f\x91 , missing the \x8b). we would instead need to concat their bytes and then try
   // to decode... but what if the trailing token is a partial? we'd need to insert a dummy token to make the sequence valid?
+  // and how do we handle regular completions that don't have the bytes field?
   //
   // i hate BPE so much
-  if ((opts.prefill != null && opts.prefill.length > 0) || tokens.length > 0) {
-    messages.push({
-      role: "assistant",
-      content: (opts.prefill ?? "") + tokens.map((t) => t.text).join(""),
-      // deepseek-specific marker for prefill
-      ...(opts.baseUrl.includes("api.deepseek.") ? { prefix: true } : {}),
-    });
-  }
-  console.log("request:", messages);
+  const prefill = (opts.prefill ?? "") + tokens.map((t) => t.text).join("");
 
-  const response = await opts.client.chat.completions.create({
-    model: opts.model,
-    messages,
-    logprobs: true,
-    top_logprobs: opts.maxWidth,
-    max_tokens: opts.depth - tokens.length,
-    temperature: 1.0, // no logit scaling
-    //   include_reasoning: true,
-    //   // @ts-expect-error openrouter shenanigans
-    //   provider: {
-    //     order: ["DeepSeek"],
-    //     allow_fallbacks: false,
-    //   }
-  });
+  let response: Completion | ChatCompletion;
+  if (opts.modelType === "chat") {
+    const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt ?? "" }];
+    if (prefill) {
+      messages.push({
+        role: "assistant",
+        content: (opts.prefill ?? "") + tokens.map((t) => t.text).join(""),
+        // deepseek-specific marker for prefill
+        ...(opts.baseUrl.includes("api.deepseek.") ? { prefix: true } : {}),
+      });
+    }
+    const request: ChatCompletionCreateParamsNonStreaming = {
+      model: opts.model,
+      messages,
+      logprobs: true,
+      top_logprobs: opts.maxWidth,
+      max_tokens: opts.depth - tokens.length,
+      temperature: 1.0, // no logit scaling, TODO: only for deepseek?
+    };
+    console.log("chat request:", request);
+    response = await opts.client.chat.completions.create(request);
+  } else {
+    const request: CompletionCreateParamsNonStreaming = {
+      model: opts.model,
+      prompt: opts.prompt + prefill,
+      logprobs: opts.maxWidth, // TODO api claims the max for this is 5? probably only for openai?
+      max_tokens: opts.depth - tokens.length,
+      temperature: 1.0, // no logit scaling, TODO: only for deepseek?
+    };
+    console.log("completion request:", request);
+    response = await opts.client.completions.create(request);
+  }
   console.log("response:", response);
 
   const choice = response.choices[0];
   if (choice == null) {
     throw new Error("response missing choices!");
   }
-  const logprobs = choice.logprobs?.content;
+  const logprobs = choice.logprobs != null ? extractLogprobs(choice.logprobs) : null;
   if (logprobs == null) {
     if (choice.finish_reason != null && choice.finish_reason !== "length") {
       // stopped because this branch is over
@@ -162,15 +187,51 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
   }
   return {
     kind: "logprobs",
-    logprobs: logprobs.map((l) => {
-      const tlps = l.top_logprobs.sort((a, b) => -(a.logprob - b.logprob));
+    logprobs: logprobs.map(({ chosenToken, topLogprobs }) => {
       return {
-        chosenToken: l.token,
+        chosenToken,
         finishReason: choice.finish_reason == null || choice.finish_reason === "length" ? null : choice.finish_reason,
-        topLogprobs: sliceToProb(tlps, opts.coverProb),
+        // sometimes the API returns more logprobs than requested, so slice to maxWidth to avoid going too wide
+        topLogprobs: sliceToProb(topLogprobs, opts.coverProb).slice(0, opts.maxWidth),
       };
     }),
   };
+}
+
+interface TokenLogprobs {
+  chosenToken: string;
+  topLogprobs: Array<{ token: string; logprob: number }>;
+}
+
+/**
+ * Extract the logprobs from a response choice. This auto-detects the format instead of using `modelType`, because
+ * some open-source APIs (not naming names...) return completion-style logprobs even for chat completions :-)
+ */
+function extractLogprobs(
+  apiLogprobs: CompletionChoice.Logprobs | ChatCompletion.Choice.Logprobs
+): TokenLogprobs[] | null {
+  if (apiLogprobs.hasOwnProperty("content")) {
+    // chat-style
+    const content = (apiLogprobs as ChatCompletion.Choice.Logprobs).content;
+    if (content == null) {
+      return null;
+    }
+    return content.map((lp) => ({
+      chosenToken: lp.token,
+      topLogprobs: lp.top_logprobs.toSorted((a, b) => -(a.logprob - b.logprob)),
+    }));
+  } else {
+    const { tokens, top_logprobs } = apiLogprobs as CompletionChoice.Logprobs;
+    if (tokens == null || top_logprobs == null) {
+      return null;
+    }
+    return tokens.map((t, idx) => ({
+      chosenToken: t,
+      topLogprobs: Object.entries(top_logprobs[idx]!)
+        .map(([token, logprob]) => ({ token, logprob }))
+        .toSorted((a, b) => -(a.logprob - b.logprob)),
+    }));
+  }
 }
 
 function appendTokens(parent: Token | Token[], queried: QueriedLogprobs) {
@@ -211,10 +272,7 @@ function appendTokens(parent: Token | Token[], queried: QueriedLogprobs) {
 }
 
 /** Take a (sorted) list of top logprobs, and slice it to the shortest length that has a total probability > `prob` */
-function sliceToProb(
-  tokens: ChatCompletionTokenLogprob.TopLogprob[],
-  prob: number
-): ChatCompletionTokenLogprob.TopLogprob[] {
+function sliceToProb(tokens: TokenLogprobs["topLogprobs"], prob: number): TokenLogprobs["topLogprobs"] {
   let cumprob = 0;
   let i = 0;
   while (cumprob < prob && i < tokens.length) {

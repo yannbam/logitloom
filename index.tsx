@@ -6,21 +6,39 @@ import * as uuid from "uuid";
 import { type Token } from "./logit-loom";
 import { useTreeStore, run, interruptRun, getTokenAndPrefix, loadTreeFromLocalStorage } from "./tree-store";
 
+const possibleModelTypes = ["chat", "base"] as const;
+type ModelType = (typeof possibleModelTypes)[number];
+function coerceToModelType(maybeType: string | undefined): ModelType {
+  const m = maybeType?.toLowerCase() ?? "chat";
+  if (([...possibleModelTypes] as string[]).includes(m)) {
+    return m as ModelType;
+  }
+  return "chat";
+}
 interface ApiPreset {
   id: string;
   presetName: string;
   baseUrl: string;
   apiKey: string;
   modelName: string;
+  modelType: ModelType;
 }
 
 function App(): JSX.Element {
   const [baseUrl, setBaseUrl] = useLocalStorageState<string>("baseUrl");
   const [apiKey, setApiKey] = useLocalStorageState<string>("apiKey");
   const [modelName, setModelName] = useLocalStorageState<string>("modelName");
+  const [_modelType, setModelType] = useLocalStorageState<"chat" | "base">("modelType", { defaultValue: "chat" });
+  const modelType = coerceToModelType(_modelType);
+
   const [apiPresets, setApiPresets] = useLocalStorageState<ApiPreset[]>("apiPresets");
+  const [currentPresetId, setCurrentPresetId] = useLocalStorageState<string>("currentPreset", {
+    defaultValue: apiPresets?.[0]?.id ?? "",
+  });
+
   const [prompt, setPrompt] = useLocalStorageState<string>("lastPrompt");
   const [prefill, setPrefill] = useLocalStorageState<string>("lastPrefill");
+
   const [depth, setDepth] = useLocalStorageState<number>("depth", { defaultValue: 5 });
   const [width, setWidth] = useLocalStorageState<number>("maxWidth", { defaultValue: 3 });
   const [coverProb, setCoverProb] = useLocalStorageState<number>("coverProb", { defaultValue: 0.8 });
@@ -36,18 +54,30 @@ function App(): JSX.Element {
         <TextSetting label="Base URL" type="text" value={baseUrl} onChange={setBaseUrl} />{" "}
         <TextSetting label="API Key" type="password" value={apiKey} onChange={setApiKey} />{" "}
         <TextSetting label="Model" type="text" value={modelName} onChange={setModelName} />{" "}
+        <DropdownSetting
+          label="Type"
+          tooltip='Pick "chat" for instruct models, "base" for base (completion) models.'
+          options={possibleModelTypes.map((v) => ({ id: v, text: v }))}
+          value={modelType}
+          onChange={(type) => {
+            setModelType(coerceToModelType(type));
+          }}
+        />
         <EditPresetsButtonDialog
           currentValues={{
             baseUrl,
             apiKey,
             modelName,
           }}
+          currentPresetId={currentPresetId}
           presets={apiPresets}
           setPresets={(presets) => setApiPresets(presets)}
           pickPreset={(preset) => {
             setBaseUrl(preset.baseUrl);
             setApiKey(preset.apiKey);
             setModelName(preset.modelName);
+            setModelType(preset.modelType);
+            setCurrentPresetId(preset.id);
           }}
         />
       </Settings>
@@ -95,6 +125,7 @@ function App(): JSX.Element {
               baseUrl,
               apiKey,
               modelName,
+              modelType,
               prompt,
               prefill,
               depth,
@@ -130,6 +161,7 @@ function App(): JSX.Element {
                 baseUrl,
                 apiKey,
                 modelName,
+                modelType,
                 prompt,
                 prefill,
                 depth,
@@ -333,18 +365,13 @@ function DropdownSetting(props: {
   label: string;
   tooltip: string;
   options: Array<{ id: string; text: string }>;
+  value: string;
   onChange: (value: string) => void;
 }): JSX.Element {
   return (
     <label>
       <span>{props.label}:</span>{" "}
-      <select onChange={(e) => props.onChange(e.target.value)}>
-        {props.options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.text}
-          </option>
-        ))}
-      </select>
+      <DropdownSettingSelect options={props.options} value={props.value} onChange={props.onChange} />
       <span>
         <Tooltip tooltip={props.tooltip} />
       </span>
@@ -352,10 +379,27 @@ function DropdownSetting(props: {
   );
 }
 
+function DropdownSettingSelect(props: {
+  options: Array<{ id: string; text: string }>;
+  value: string;
+  onChange: (value: string) => void;
+}): JSX.Element {
+  return (
+    <select value={props.value} onChange={(e) => props.onChange(e.target.value)}>
+      {props.options.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.text}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 // "Edit presets" dialog components
 
 function EditPresetsButtonDialog(props: {
   currentValues: Partial<Omit<ApiPreset, "id" | "presetName">>;
+  currentPresetId: string;
   presets: ApiPreset[] | undefined;
   setPresets: (presets: ApiPreset[]) => void;
   pickPreset: (preset: ApiPreset) => void;
@@ -371,6 +415,7 @@ function EditPresetsButtonDialog(props: {
             label="Preset"
             tooltip="Saved Base URL / API key / Model preset. Use the Edit Presets button to add presets."
             options={presets.map((p) => ({ id: p.id, text: p.presetName }))}
+            value={props.currentPresetId}
             onChange={(presetId) => {
               const preset = presets.find((p) => p.id === presetId);
               if (preset != null) {
@@ -416,6 +461,7 @@ function EditPresetsButtonDialog(props: {
                     baseUrl: "",
                     apiKey: "",
                     modelName: "",
+                    modelType: "chat",
                   },
                   ...presets,
                 ]);
@@ -432,6 +478,7 @@ function EditPresetsButtonDialog(props: {
                     baseUrl: props.currentValues.baseUrl ?? "",
                     apiKey: props.currentValues.apiKey ?? "",
                     modelName: props.currentValues.modelName ?? "",
+                    modelType: props.currentValues.modelType ?? "chat",
                   },
                   ...presets,
                 ]);
@@ -445,6 +492,7 @@ function EditPresetsButtonDialog(props: {
           <span>Base URL</span>
           <span>API Key</span>
           <span>Model</span>
+          <span>Type</span>
           <span></span>
           {presets.map((preset) => (
             <EditPresetsDialogRow
@@ -469,7 +517,7 @@ function EditPresetsDialogRow(props: {
   onChange: (newPreset: ApiPreset) => void;
   deletePreset: () => void;
 }): JSX.Element {
-  const { presetName, baseUrl, apiKey, modelName } = props.preset;
+  const { presetName, baseUrl, apiKey, modelName, modelType } = props.preset;
   return (
     <>
       <TextSettingInput
@@ -498,6 +546,13 @@ function EditPresetsDialogRow(props: {
         value={modelName}
         onChange={(newModelName) => {
           props.onChange({ ...props.preset, modelName: newModelName });
+        }}
+      />
+      <DropdownSettingSelect
+        options={possibleModelTypes.map((v) => ({ id: v, text: v }))}
+        value={modelType}
+        onChange={(newModelType) => {
+          props.onChange({ ...props.preset, modelType: coerceToModelType(newModelType) });
         }}
       />
       <button
