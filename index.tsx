@@ -1,14 +1,24 @@
-import { useEffect, useLayoutEffect, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import ReactDOM from "react-dom/client";
 import useLocalStorageState from "use-local-storage-state";
+import * as uuid from "uuid";
 
 import { type Token } from "./logit-loom";
 import { useTreeStore, run, interruptRun, getTokenAndPrefix, loadTreeFromLocalStorage } from "./tree-store";
+
+interface ApiPreset {
+  id: string;
+  presetName: string;
+  baseUrl: string;
+  apiKey: string;
+  modelName: string;
+}
 
 function App(): JSX.Element {
   const [baseUrl, setBaseUrl] = useLocalStorageState<string>("baseUrl");
   const [apiKey, setApiKey] = useLocalStorageState<string>("apiKey");
   const [modelName, setModelName] = useLocalStorageState<string>("modelName");
+  const [apiPresets, setApiPresets] = useLocalStorageState<ApiPreset[]>("apiPresets");
   const [prompt, setPrompt] = useLocalStorageState<string>("lastPrompt");
   const [prefill, setPrefill] = useLocalStorageState<string>("lastPrefill");
   const [depth, setDepth] = useLocalStorageState<number>("depth", { defaultValue: 5 });
@@ -25,7 +35,21 @@ function App(): JSX.Element {
       <Settings>
         <TextSetting label="Base URL" type="text" value={baseUrl} onChange={setBaseUrl} />{" "}
         <TextSetting label="API Key" type="password" value={apiKey} onChange={setApiKey} />{" "}
-        <TextSetting label="Model" type="text" value={modelName} onChange={setModelName} />
+        <TextSetting label="Model" type="text" value={modelName} onChange={setModelName} />{" "}
+        <EditPresetsButtonDialog
+          currentValues={{
+            baseUrl,
+            apiKey,
+            modelName,
+          }}
+          presets={apiPresets}
+          setPresets={(presets) => setApiPresets(presets)}
+          pickPreset={(preset) => {
+            setBaseUrl(preset.baseUrl);
+            setApiKey(preset.apiKey);
+            setModelName(preset.modelName);
+          }}
+        />
       </Settings>
       <hr />
       <Settings>
@@ -97,6 +121,23 @@ function App(): JSX.Element {
                 setPrefill((prefill ?? "") + newPrefill);
               }
             }}
+            expandDisabled={!baseUrl || !apiKey || !modelName || store.running}
+            onClickExpandFromHere={(id) => {
+              if (!baseUrl || !apiKey || !modelName || store.running) {
+                return;
+              }
+              run({
+                baseUrl,
+                apiKey,
+                modelName,
+                prompt,
+                prefill,
+                depth,
+                maxWidth: width,
+                coverProb,
+                fromNodeId: id,
+              });
+            }}
           />
         ) : (
           <p style={{ color: "red" }}>{store.value.error.toString()}</p>
@@ -106,16 +147,25 @@ function App(): JSX.Element {
   );
 }
 
-function Tree(props: { roots: Token[]; onClickAddPrefill: (id: string) => void }): JSX.Element {
+// Tree UI
+
+function Tree(props: {
+  roots: Token[];
+  onClickAddPrefill: (id: string) => void;
+  expandDisabled: boolean;
+  onClickExpandFromHere: (id: string) => void;
+}): JSX.Element {
   return (
     <ol>
       {props.roots.map((c) => (
         <TreeNode
           key={c.id}
           node={c}
-          parent={null}
+          parents={[]}
           siblings={props.roots}
           onClickAddPrefill={props.onClickAddPrefill}
+          expandDisabled={props.expandDisabled}
+          onClickExpandFromHere={props.onClickExpandFromHere}
         />
       ))}
     </ol>
@@ -124,16 +174,20 @@ function Tree(props: { roots: Token[]; onClickAddPrefill: (id: string) => void }
 
 function TreeNode({
   node,
-  parent,
+  parents,
   siblings,
   parentHasShortDownLine,
   onClickAddPrefill,
+  expandDisabled,
+  onClickExpandFromHere,
 }: {
   node: Token;
-  parent: Token | null;
+  parents: Token[];
   siblings: Token[];
   parentHasShortDownLine?: boolean;
   onClickAddPrefill: (id: string) => void;
+  expandDisabled: boolean;
+  onClickExpandFromHere: (id: string) => void;
 }): JSX.Element {
   // has a down line if any children
   const hasDownLine = node.children.length > 0;
@@ -142,11 +196,11 @@ function TreeNode({
   // has a left line if it has a parent, and either
   // 1. parent doesn't have a short down line
   // 2. parent does have a short down line, but this is the first child
-  const hasLeftLine = parent === null ? false : parentHasShortDownLine ? siblings[0] === node : true;
+  const hasLeftLine = parents.length === 0 ? false : parentHasShortDownLine ? siblings[0] === node : true;
 
-  const recoveredEmoji = tryRecoverBrokenEmoji(node, parent);
+  const recoveredEmoji = tryRecoverBrokenEmoji([...parents, node]);
 
-  const text = node.text.replace(" ", "␣").replace("\n", "↵");
+  const text = node.text.replaceAll(" ", "␣").replaceAll("\n", "↵");
   return (
     <li
       className={
@@ -163,8 +217,16 @@ function TreeNode({
           [{node.logprob.toFixed(4)}]{" "}
           {node.branchFinished != null && node.children.length === 0 && `<|${node.branchFinished}|>`}
         </span>{" "}
-        <button className="add-prefill" title="Add to prefill" onClick={() => onClickAddPrefill(node.id)}>
+        <button className="node-button add-prefill" title="Add to prefill" onClick={() => onClickAddPrefill(node.id)}>
           📥
+        </button>
+        <button
+          className="node-button expand-from-here"
+          disabled={expandDisabled}
+          title="Expand tree from here"
+          onClick={() => onClickExpandFromHere(node.id)}
+        >
+          🌱
         </button>
       </div>
       {!!node.children.length && (
@@ -173,10 +235,12 @@ function TreeNode({
             <TreeNode
               key={c.id}
               node={c}
-              parent={node}
+              parents={[...parents, node]}
               siblings={node.children}
               parentHasShortDownLine={hasShortDownLine}
               onClickAddPrefill={onClickAddPrefill}
+              expandDisabled={expandDisabled}
+              onClickExpandFromHere={onClickExpandFromHere}
             />
           ))}
         </ol>
@@ -184,6 +248,8 @@ function TreeNode({
     </li>
   );
 }
+
+// Settings components
 
 function Settings(props: { children?: React.ReactNode | undefined }): JSX.Element {
   return <div className="settings-container">{props.children}</div>;
@@ -197,17 +263,26 @@ function TextSetting(props: {
 }): JSX.Element {
   return (
     <label style={!props.value ? { color: "rgb(128, 32, 32)" } : {}}>
-      <span>{props.label}:</span>{" "}
-      <input
-        style={!props.value ? { backgroundColor: "rgb(228, 50, 50)" } : {}}
-        placeholder="(required)"
-        type={props.type}
-        value={props.value}
-        autoCapitalize="off"
-        autoCorrect="off"
-        onChange={(e) => props.onChange(e.target.value)}
-      />
+      <span>{props.label}:</span> <TextSettingInput value={props.value} type={props.type} onChange={props.onChange} />
     </label>
+  );
+}
+
+function TextSettingInput(props: {
+  type: "text" | "password";
+  value: string | undefined;
+  onChange: (value: string) => void;
+}): JSX.Element {
+  return (
+    <input
+      style={!props.value ? { backgroundColor: "rgb(228, 50, 50)" } : {}}
+      placeholder="(required)"
+      type={props.type}
+      value={props.value}
+      autoCapitalize="off"
+      autoCorrect="off"
+      onChange={(e) => props.onChange(e.target.value)}
+    />
   );
 }
 
@@ -237,7 +312,7 @@ function NumberSetting(props: {
 }): JSX.Element {
   return (
     <label>
-      <span>{props.label}: </span>{" "}
+      <span>{props.label}:</span>{" "}
       <input
         type="number"
         min={props.min}
@@ -253,42 +328,235 @@ function NumberSetting(props: {
   );
 }
 
+function DropdownSetting(props: {
+  label: string;
+  tooltip: string;
+  options: Array<{ id: string; text: string }>;
+  onChange: (value: string) => void;
+}): JSX.Element {
+  return (
+    <label>
+      <span>{props.label}:</span>{" "}
+      <select onChange={(e) => props.onChange(e.target.value)}>
+        {props.options.map((option) => (
+          <option key={option.id} value={option.id}>
+            {option.text}
+          </option>
+        ))}
+      </select>
+      <span>
+        <Tooltip tooltip={props.tooltip} />
+      </span>
+    </label>
+  );
+}
+
+// "Edit presets" dialog components
+
+function EditPresetsButtonDialog(props: {
+  currentValues: Partial<Omit<ApiPreset, "id" | "presetName">>;
+  presets: ApiPreset[] | undefined;
+  setPresets: (presets: ApiPreset[]) => void;
+  pickPreset: (preset: ApiPreset) => void;
+}): JSX.Element {
+  const modal = useRef<HTMLDialogElement | null>(null);
+  const presets = props.presets ?? [];
+
+  return (
+    <>
+      {presets.length > 0 && (
+        <>
+          <DropdownSetting
+            label="Preset"
+            tooltip="Saved Base URL / API key / Model preset. Use the Edit Presets button to add presets."
+            options={presets.map((p) => ({ id: p.id, text: p.presetName }))}
+            onChange={(presetId) => {
+              const preset = presets.find((p) => p.id === presetId);
+              if (preset != null) {
+                props.pickPreset(preset);
+              }
+            }}
+          />{" "}
+        </>
+      )}
+      <button
+        onClick={() => {
+          modal.current?.showModal();
+        }}
+      >
+        Edit presets
+      </button>
+
+      <dialog
+        id="edit-presets"
+        ref={modal}
+        onCancel={() => {
+          modal.current?.close();
+        }}
+      >
+        <header>
+          <strong>Edit API Presets</strong>
+          <button
+            onClick={() => {
+              modal.current?.close();
+            }}
+          >
+            ✕
+          </button>
+        </header>
+        <main>
+          <div id="preset-dialog-buttons">
+            <button
+              onClick={() => {
+                props.setPresets([
+                  {
+                    id: uuid.v4(),
+                    presetName: "",
+                    baseUrl: "",
+                    apiKey: "",
+                    modelName: "",
+                  },
+                  ...presets,
+                ]);
+              }}
+            >
+              Add new preset
+            </button>
+            <button
+              onClick={() => {
+                props.setPresets([
+                  {
+                    id: uuid.v4(),
+                    presetName: "",
+                    baseUrl: props.currentValues.baseUrl ?? "",
+                    apiKey: props.currentValues.apiKey ?? "",
+                    modelName: props.currentValues.modelName ?? "",
+                  },
+                  ...presets,
+                ]);
+              }}
+            >
+              Import current settings as preset
+            </button>
+          </div>
+          <hr />
+          <span>Preset Name</span>
+          <span>Base URL</span>
+          <span>API Key</span>
+          <span>Model</span>
+          <span></span>
+          {presets.map((preset) => (
+            <EditPresetsDialogRow
+              key={preset.id}
+              preset={preset}
+              onChange={(newPreset) => {
+                props.setPresets(presets.map((p) => (p.id === newPreset.id ? newPreset : p)));
+              }}
+              deletePreset={() => {
+                props.setPresets(presets.filter((p) => p.id !== preset.id));
+              }}
+            />
+          ))}
+        </main>
+      </dialog>
+    </>
+  );
+}
+
+function EditPresetsDialogRow(props: {
+  preset: ApiPreset;
+  onChange: (newPreset: ApiPreset) => void;
+  deletePreset: () => void;
+}): JSX.Element {
+  const { presetName, baseUrl, apiKey, modelName } = props.preset;
+  return (
+    <>
+      <TextSettingInput
+        type="text"
+        value={presetName}
+        onChange={(newPresetName) => {
+          props.onChange({ ...props.preset, presetName: newPresetName });
+        }}
+      />
+      <TextSettingInput
+        type="text"
+        value={baseUrl}
+        onChange={(newBaseUrl) => {
+          props.onChange({ ...props.preset, baseUrl: newBaseUrl });
+        }}
+      />
+      <TextSettingInput
+        type="password"
+        value={apiKey}
+        onChange={(newApiKey) => {
+          props.onChange({ ...props.preset, apiKey: newApiKey });
+        }}
+      />
+      <TextSettingInput
+        type="text"
+        value={modelName}
+        onChange={(newModelName) => {
+          props.onChange({ ...props.preset, modelName: newModelName });
+        }}
+      />
+      <button
+        onClick={() => {
+          props.deletePreset();
+        }}
+      >
+        Delete
+      </button>
+    </>
+  );
+}
+
+// Broken UTF-8 chip helpers
+
 /**
  * Try to fix broken emoji sequences, e.g. { text: "\\x20\\xf0\\x9f\\x8c", ... },
  * which may be spread over multiple tokens.
- * 
+ *
  * TODO right now this only handles simple situations like \\x20\\xf0\\x9f -> \\x8c in two tokens
  * Other things I've seen:
- * 
+ *
  * - \\x11 -> \\x22\\x33 -> \\x44 over three or more tokens
  * - \\x11\\x22 -> \\x -> 33 where the byte escaoe is split between two tokens(!)
- * 
+ *
  * Need to handle these still.
  * **/
-function tryRecoverBrokenEmoji(token: Token, parent: Token | null): string | null {
-  if (!looksLikeEscapedUtf8(token.text)) {
+function tryRecoverBrokenEmoji(tokens: Token[]): string | null {
+  if (!tokens.length || !looksLikeEscapedUtf8(tokens.at(-1)!.text, false)) {
     return null;
   }
 
-  // If we have a parent, try to combine with parent text
-  if (parent && looksLikeEscapedUtf8(parent.text)) {
-    const combinedDecoded = decodeEscapedUtf8(parent.text + token.text);
-    if (combinedDecoded) {
-      return combinedDecoded;
+  const mask = tokens.map((t) => looksLikeEscapedUtf8(t.text, false));
+  // token position where every token after looks like broken utf-8
+  // [false, true, false, true, true]
+  //                      ^ start
+  const start = mask.findIndex((_, idx) => mask.slice(idx, mask.length).every((v) => v));
+
+  for (let i = start; i < tokens.length; i++) {
+    const joined = tokens
+      .slice(start, tokens.length)
+      .map((t) => t.text)
+      .join("");
+    if (looksLikeEscapedUtf8(joined, true)) {
+      const decoded = decodeEscapedUtf8(joined);
+      if (decoded != null) {
+        return decoded;
+      }
     }
   }
-
-  // Try to decode the token text by itself
-  const selfDecoded = decodeEscapedUtf8(token.text);
-  if (selfDecoded) {
-    return selfDecoded;
-  }
-
   return null;
 }
 
-function looksLikeEscapedUtf8(s: string): boolean {
-  return s.match(/^(\\x[0-9a-fA-F]{2})+$/g) !== null;
+function looksLikeEscapedUtf8(s: string, strict: boolean): boolean {
+  const wholeEscape = s.match(/^(\\x[0-9a-fA-F]{2})+$/g) !== null;
+  if (strict) {
+    return wholeEscape;
+  }
+  // also allow \\x -> aa split escapes
+  return wholeEscape || s.match(/^((\\x)?[0-9a-fA-F]{1,2}|\\x)$/g) !== null;
 }
 
 function decodeEscapedUtf8(s: string): string | null {
@@ -302,6 +570,8 @@ function decodeEscapedUtf8(s: string): string | null {
     return null;
   }
 }
+
+// Mount app
 
 document.addEventListener("DOMContentLoaded", () => {
   const appDiv = document.querySelector("#app");

@@ -14,6 +14,7 @@ export interface Token {
 
 export interface TreeOptions {
   client: InstanceType<typeof OpenAI>;
+  baseUrl: string,
   model: string;
   prompt?: string;
   prefill?: string;
@@ -23,6 +24,7 @@ export interface TreeOptions {
   progress: (tokens: Token[]) => boolean;
 }
 
+/** Build a fresh tree from the prompt / prefill */
 export async function buildTree(opts: TreeOptions): Promise<Token[]> {
   const roots: Token[] = [];
   appendTokens(roots, await query([], opts));
@@ -45,10 +47,37 @@ export async function buildTree(opts: TreeOptions): Promise<Token[]> {
   return roots;
 }
 
+/** Expand an existing tree from the given id */
+export async function expandTree(opts: TreeOptions, roots: Token[], id: string): Promise<Token[]> {
+  roots = structuredClone(roots);
+  opts = { ...opts, depth: opts.depth + 1 }; // to include the node itself
+  const nodePath = pathToNodeWithId(id, roots);
+  if (nodePath == null) {
+    throw new Error(`node with id ${id} doesn't exist!`);
+  }
+  const node = nodePath.at(-1)!;
+  node.children = [];
+  const extraPrefill = nodePath.slice(0, -1).map(t => t.text).join("");
+  console.log(node, extraPrefill, node.text);
+
+  while (true) {
+    const prefix = getContinuablePrefix([node], opts.depth);
+    console.log(prefix);
+    if (prefix === null) {
+      break;
+    }
+    appendTokens(prefix.at(-1)!, await query(prefix, { ...opts, prefill: opts.prefill + extraPrefill }));
+    if (opts.progress(structuredClone(roots))) {
+      return roots; // interrupt
+    }
+  }
+  return roots;
+}
+
 export function pathToNodeWithId(id: string, roots: Token[]): Token[] | null {
   for (let root of roots) {
     for (let traversal of _treeTraversals(root)) {
-      const idx = traversal.findIndex(t => t.id === id);
+      const idx = traversal.findIndex((t) => t.id === id);
       if (idx === -1) {
         continue;
       }
@@ -76,13 +105,23 @@ type QueriedLogprobs =
     };
 async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprobs> {
   const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt ?? "" }];
+  // TODO this is giga-broken for byte tokens with invalid unicode
+  //
+  // deepseek handles these with the very elegant solution of escaping them to \xaa\xbb and then sticking the bytes in a
+  // `bytes` field on the logprob (as a list of integers)
+  // we just naively take the text and then pass escapes into the model, which causes it to generate more escapes and
+  // quickly enter byte-escapes-fucksville
+  // the problem is we can't work with the tokens one-by-one to turn the bytes into text because they are invalid unicode
+  // on their own (e.g. \x20\xf0\x9f\x91 , missing the \x8b). we would instead need to concat their bytes and then try
+  // to decode... but what if the trailing token is a partial? we'd need to insert a dummy token to make the sequence valid?
+  //
+  // i hate BPE so much
   if ((opts.prefill != null && opts.prefill.length > 0) || tokens.length > 0) {
     messages.push({
       role: "assistant",
       content: (opts.prefill ?? "") + tokens.map((t) => t.text).join(""),
-      // @ts-expect-error "prefix" is a nonstandard deepseek thing
-      // TODO shouldn't add unconditionally, only for deepseek base urls (not for openrouter)
-      prefix: true,
+      // deepseek-specific marker for prefill
+      ...(opts.baseUrl.includes("api.deepseek.") ? { prefix: true } : {}),
     });
   }
   console.log("request:", messages);

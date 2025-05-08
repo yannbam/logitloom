@@ -1,5 +1,5 @@
 import OpenAI from "./openai";
-import { buildTree, pathToNodeWithId, type Token } from "./logit-loom";
+import { buildTree, expandTree, pathToNodeWithId, type Token } from "./logit-loom";
 import { useSyncExternalStore } from "react";
 
 export function useTreeStore(): State {
@@ -48,7 +48,7 @@ export function getTokenAndPrefix(state: State, id: string): string | null {
 }
 
 export function loadTreeFromLocalStorage() {
-  state = { ...state, value: { kind: "tree", roots: tryGetTreeFromLocalStorage() }};
+  state = { ...state, value: { kind: "tree", roots: tryGetTreeFromLocalStorage() } };
   emitChange();
 }
 
@@ -69,6 +69,7 @@ export function run(opts: {
   depth: number;
   maxWidth: number;
   coverProb: number;
+  fromNodeId?: string;
 }) {
   if (state.running) {
     return;
@@ -83,21 +84,48 @@ export function run(opts: {
   state = { ...state, running: true };
   emitChange();
 
-  buildTree({
-    client,
-    model: opts.modelName,
-    prompt: opts.prompt,
-    prefill: opts.prefill,
-    depth: opts.depth,
-    maxWidth: opts.maxWidth,
-    coverProb: opts.coverProb,
-    progress: (roots) => {
-      state = { ...state, value: { kind: "tree", roots } };
-      trySyncTreeToLocalStorage(roots);
-      emitChange();
-      return state.interrupting; // interrupt if user requested it
-    },
-  })
+  function progress(roots: Token[]) {
+    state = { ...state, value: { kind: "tree", roots } };
+    trySyncTreeToLocalStorage(roots);
+    emitChange();
+    return state.interrupting; // interrupt if user requested it
+  }
+
+  let promise: Promise<Token[]>;
+  if (opts.fromNodeId == null) {
+    promise = buildTree({
+      client,
+      baseUrl: opts.baseUrl,
+      model: opts.modelName,
+      prompt: opts.prompt,
+      prefill: opts.prefill,
+      depth: opts.depth,
+      maxWidth: opts.maxWidth,
+      coverProb: opts.coverProb,
+      progress,
+    });
+  } else {
+    if (state.value.kind !== "tree") {
+      throw new Error(`ui bug: state missing tree, can't expand '${opts.fromNodeId}' (how did you get this id?)`);
+    }
+    promise = expandTree(
+      {
+        client,
+        baseUrl: opts.baseUrl,
+        model: opts.modelName,
+        prompt: opts.prompt,
+        prefill: opts.prefill,
+        depth: opts.depth,
+        maxWidth: opts.maxWidth,
+        coverProb: opts.coverProb,
+        progress,
+      },
+      state.value.roots,
+      opts.fromNodeId
+    );
+  }
+
+  promise
     .then((roots) => {
       state = { value: { kind: "tree", roots }, running: false, interrupting: false };
       trySyncTreeToLocalStorage(roots);

@@ -19,9 +19,12 @@
             gap: 0.75rem;
         }
 
-        .settings-container>label {
+        .settings-container> :is(label, button) {
             flex: 1 1 auto;
-            /* min-width: 10rem; */
+        }
+
+        .settings-container> :is(label:has(input, select), button) {
+            max-width: fit-content;
         }
 
         .settings-container>label {
@@ -38,11 +41,6 @@
 
         .settings-container>label> :is(textarea, input) {
             flex: 1 1 auto;
-        }
-
-        .settings-container>label:has(input) {
-            max-width: fit-content;
-            /* min-width: 10em; */
         }
 
         .settings-container>label>input {
@@ -111,22 +109,27 @@
             color: rgb(39, 128, 22);
         }
 
-        li>div:hover button.add-prefill {
+        li>div button.node-button {
             font-size: 75%;
             display: inline-block;
             padding: 0;
             margin: 0;
             background: none;
             border: none;
+            cursor: pointer;
+        }
+
+        li>div button.node-button[disabled] {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        li>div:not(:hover) button.node-button {
+            display: none;
         }
 
         li:not(:hover) {
             color: black;
-        }
-
-        button.add-prefill,
-        li>div:not(:hover) button.add-prefill {
-            display: none;
         }
 
         .spinner {
@@ -143,6 +146,47 @@
             to {
                 transform: rotate(1turn)
             }
+        }
+
+        #edit-presets[open] {
+            display: flex;
+            flex-direction: column;
+            width: 80vw;
+            height: 80vh;
+            border: 1px solid black;
+        }
+
+        #edit-presets header {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        #edit-presets main {
+            max-height: 100%;
+            padding: 0 1rem;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+            gap: 0.5rem;
+        }
+
+        #edit-presets main button {
+            width: fit-content;
+        }
+
+        #edit-presets main #preset-dialog-buttons {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-flow: row nowrap;
+            gap: 0.5em;
+        }
+
+
+        #edit-presets main hr {
+            grid-column: 1 / -1;
+            width: 100%;
         }
     </style>
 </head>
