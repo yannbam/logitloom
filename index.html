@@ -6,10 +6,10 @@
     <style>
         * {
             box-sizing: border-box;
-        }
 
-        *[hidden] {
-            display: none !important;
+            &[hidden] {
+                display: none !important;
+            }
         }
 
         .settings-container {
@@ -17,129 +17,49 @@
             flex-flow: row wrap;
             justify-content: flex-start;
             gap: 0.75rem;
-        }
 
-        .settings-container> :is(label, button) {
-            flex: 1 1 auto;
-        }
+            >:is(label, button) {
+                flex: 1 1 auto;
+            }
 
-        .settings-container> :is(label:has(input, select), button) {
-            max-width: fit-content;
-        }
+            >:is(label:has(input, select), button) {
+                max-width: fit-content;
+            }
 
-        .settings-container>label {
-            display: flex;
-            flex-flow: row nowrap;
-            gap: 0.25rem;
+            >label {
+                display: flex;
+                flex-flow: row nowrap;
+                gap: 0.25rem;
 
-        }
+                >span {
+                    text-wrap: nowrap;
+                    font-size: 80%;
+                }
 
-        .settings-container>label>span {
-            text-wrap: nowrap;
-            font-size: 80%;
-        }
+                >textarea,
+                >input {
+                    flex: 1 1 auto;
+                }
 
-        .settings-container>label> :is(textarea, input) {
-            flex: 1 1 auto;
-        }
+                >input {
+                    max-height: 2em;
+                }
 
-        .settings-container>label>input {
-            max-height: 2em;
-        }
+                >input[type=number] {
+                    max-width: 4em;
+                    min-width: 4em;
+                }
+            }
 
-        .settings-container>label>input[type=number] {
-            max-width: 4em;
-            min-width: 4em;
-        }
-
-
-        li {
-            position: relative;
-            margin-top: 10px;
-        }
-
-        li.has-left-line::before {
-            content: '';
-            position: absolute;
-            left: -3.5em;
-            right: calc(100% + 1.5em);
-            top: 0.5em;
-            bottom: 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.25);
-        }
-
-        li.has-down-line>ol::before {
-            content: '';
-            position: absolute;
-            top: 1.5em;
-            bottom: 0;
-            left: -1em;
-            border-left: 1px solid black;
-        }
-
-        li.has-short-down-line>ol::before {
-            bottom: calc(100% - 2.31em);
-        }
-
-        li span.token {
-            font-family: monospace;
-            background-color: rgb(231, 231, 231);
-            border: 1px solid black;
-            padding: 2px 4px;
-            border-radius: 5px;
-        }
-
-        li span.token-utf8 {
-            font-size: 70%;
-            border: 1px solid black;
-            padding: 2px 4px;
-            border-radius: 5px;
-        }
-
-        li span.prob {
-            font-size: 80%;
-        }
-
-        li span.extra {
-            font-size: 80%;
-            opacity: 50%;
-        }
-
-        li:hover {
-            color: rgb(39, 128, 22);
-        }
-
-        li>div button.node-button {
-            font-size: 75%;
-            display: inline-block;
-            padding: 0;
-            margin: 0;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        li>div button.node-button[disabled] {
-            opacity: 0.5;
-            cursor: default;
-        }
-
-        li>div:not(:hover) button.node-button {
-            display: none;
-        }
-
-        li:not(:hover) {
-            color: black;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            border: .15em solid currentColor;
-            border-right-color: transparent;
-            border-radius: 50%;
-            animation: s .6s linear infinite
+            .spinner {
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                border: .15em solid currentColor;
+                border-right-color: transparent;
+                border-radius: 50%;
+                animation: s .6s linear infinite
+            }
         }
 
         @keyframes s {
@@ -148,45 +68,134 @@
             }
         }
 
-        #edit-presets[open] {
-            display: flex;
-            flex-direction: column;
+        li.tree-node {
+            position: relative;
+            margin-top: 10px;
+
+            &:hover {
+                color: rgb(39, 128, 22);
+            }
+
+            &:not(:hover) {
+                color: black;
+            }
+
+            &.has-left-line::before {
+                content: '';
+                position: absolute;
+                left: -3.5em;
+                right: calc(100% + 1.5em);
+                top: 0.5em;
+                bottom: 0;
+                border-top: 1px solid rgba(0, 0, 0, 0.25);
+            }
+
+            &.has-down-line>ol::before {
+                content: '';
+                position: absolute;
+                top: 1.5em;
+                bottom: 0;
+                left: -1em;
+                border-left: 1px solid black;
+
+            }
+
+            &.has-short-down-line>ol::before {
+                /* TODO: super hacky */
+                bottom: calc(100% - 2.31em);
+            }
+
+            div.tree-node-info {
+                span.token {
+                    font-family: monospace;
+                    background-color: rgb(231, 231, 231);
+                    border: 1px solid black;
+                    padding: 2px 4px;
+                    border-radius: 5px;
+                }
+
+                span.token-utf8 {
+                    font-size: 75%;
+                    /* a bit smaller bc emoji renders larger */
+                    border: 1px solid black;
+                    padding: 2px 4px;
+                    border-radius: 5px;
+                }
+
+                span.prob {
+                    font-size: 80%;
+                }
+
+                span.extra {
+                    font-size: 80%;
+                    opacity: 50%;
+                }
+
+                button.node-button {
+                    font-size: 75%;
+                    display: inline-block;
+                    padding: 0;
+                    margin: 0;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+
+                    &[disabled] {
+                        opacity: 0.5;
+                        cursor: default;
+                    }
+                }
+            }
+
+            div.tree-node-info:not(:hover) {
+                button.node-button {
+                    display: none;
+                }
+            }
+        }
+
+        #edit-presets {
             width: 80vw;
             height: 80vh;
             border: 1px solid black;
-        }
 
-        #edit-presets header {
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
+            &[open] {
+                display: flex;
+                flex-direction: column;
+            }
 
-        #edit-presets main {
-            max-height: 100%;
-            padding: 0 1rem;
-            overflow-y: auto;
-            display: grid;
-            grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
-            gap: 0.5rem;
-        }
+            header {
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
 
-        #edit-presets main button {
-            width: fit-content;
-        }
+            main {
+                max-height: 100%;
+                padding: 0 1rem;
+                overflow-y: auto;
+                display: grid;
+                /* presetName baseUrl apiKey modelName delete */
+                grid-template-columns: 2fr 2fr 2fr 2fr 1fr;
+                gap: 0.5rem;
 
-        #edit-presets main #preset-dialog-buttons {
-            grid-column: 1 / -1;
-            display: flex;
-            flex-flow: row nowrap;
-            gap: 0.5em;
-        }
+                button {
+                    width: fit-content;
+                }
 
+                #preset-dialog-buttons {
+                    grid-column: 1 / -1;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    gap: 0.5em;
+                }
 
-        #edit-presets main hr {
-            grid-column: 1 / -1;
-            width: 100%;
+                hr {
+                    grid-column: 1 / -1;
+                    width: 100%;
+                }
+            }
         }
     </style>
 </head>

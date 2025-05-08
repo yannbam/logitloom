@@ -204,12 +204,13 @@ function TreeNode({
   return (
     <li
       className={
-        (hasDownLine ? "has-down-line " : "") +
-        (hasShortDownLine ? "has-short-down-line " : "") +
-        (hasLeftLine ? "has-left-line " : "")
+        "tree-node" +
+        (hasDownLine ? " has-down-line" : "") +
+        (hasShortDownLine ? " has-short-down-line" : "") +
+        (hasLeftLine ? " has-left-line" : "")
       }
     >
-      <div>
+      <div className="tree-node-info">
         <span className="token">{node.children.length ? <strong>{text}</strong> : text}</span>{" "}
         {recoveredEmoji ? <span className="token-utf8">utf8: {recoveredEmoji.trim()}</span> : ""}{" "}
         <span className="prob">({(node.prob * 100).toFixed(2)}%)</span>{" "}
