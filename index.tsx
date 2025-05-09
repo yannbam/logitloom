@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type JSX } from "react";
+import React, { useEffect, useRef, type JSX } from "react";
 import ReactDOM from "react-dom/client";
 import useLocalStorageState from "use-local-storage-state";
 import * as uuid from "uuid";
@@ -43,6 +43,7 @@ function App(): JSX.Element {
   const [width, setWidth] = useLocalStorageState<number>("maxWidth", { defaultValue: 3 });
   const [coverProb, setCoverProb] = useLocalStorageState<number>("coverProb", { defaultValue: 0.8 });
   const store = useTreeStore();
+  const [foldedNodeIds, setFoldedNodeIds] = useLocalStorageState<string[]>("foldedNodes", { defaultValue: [] });
 
   useEffect(() => {
     loadTreeFromLocalStorage();
@@ -50,6 +51,12 @@ function App(): JSX.Element {
 
   return (
     <>
+      <div className="sticky-footer">
+        <div className="spinner" hidden={!store.running}></div>{" "}
+        <div className="error">
+          {store.value.kind === "error" && store.value.error.toString()}
+        </div>
+      </div>
       <Settings>
         <TextSetting label="Base URL" type="text" value={baseUrl} onChange={setBaseUrl} />{" "}
         <TextSetting label="API Key" type="password" value={apiKey} onChange={setApiKey} />{" "}
@@ -136,44 +143,41 @@ function App(): JSX.Element {
         >
           Run
         </button>{" "}
-        <div className="spinner" hidden={!store.running}></div>{" "}
         <button hidden={!store.running} disabled={store.interrupting} onClick={interruptRun}>
           {store.interrupting ? "Stopping..." : "Stop"}
         </button>
       </Settings>
       <hr />
       <div>
-        {store.value.kind === "tree" ? (
-          <Tree
-            roots={store.value.roots}
-            onClickAddPrefill={(id) => {
-              const newPrefill = getTokenAndPrefix(store, id);
-              if (newPrefill !== null) {
-                setPrefill((prefill ?? "") + newPrefill);
-              }
-            }}
-            expandDisabled={!baseUrl || !apiKey || !modelName || store.running}
-            onClickExpandFromHere={(id) => {
-              if (!baseUrl || !apiKey || !modelName || store.running) {
-                return;
-              }
-              run({
-                baseUrl,
-                apiKey,
-                modelName,
-                modelType,
-                prompt,
-                prefill,
-                depth,
-                maxWidth: width,
-                coverProb,
-                fromNodeId: id,
-              });
-            }}
-          />
-        ) : (
-          <p style={{ color: "red" }}>{store.value.error.toString()}</p>
-        )}
+        <Tree
+          roots={store.value.roots ?? []}
+          foldedNodeIds={foldedNodeIds}
+          setFoldedNodeIds={setFoldedNodeIds}
+          onClickAddPrefill={(id) => {
+            const newPrefill = getTokenAndPrefix(store, id);
+            if (newPrefill !== null) {
+              setPrefill((prefill ?? "") + newPrefill);
+            }
+          }}
+          expandDisabled={!baseUrl || !apiKey || !modelName || store.running}
+          onClickExpandFromHere={(id) => {
+            if (!baseUrl || !apiKey || !modelName || store.running) {
+              return;
+            }
+            run({
+              baseUrl,
+              apiKey,
+              modelName,
+              modelType,
+              prompt,
+              prefill,
+              depth,
+              maxWidth: width,
+              coverProb,
+              fromNodeId: id,
+            });
+          }}
+        />
       </div>
     </>
   );
@@ -183,6 +187,8 @@ function App(): JSX.Element {
 
 function Tree(props: {
   roots: Token[];
+  foldedNodeIds: string[];
+  setFoldedNodeIds: (ids: string[]) => void;
   onClickAddPrefill: (id: string) => void;
   expandDisabled: boolean;
   onClickExpandFromHere: (id: string) => void;
@@ -195,6 +201,8 @@ function Tree(props: {
           node={c}
           parents={[]}
           siblings={props.roots}
+          foldedNodeIds={props.foldedNodeIds}
+          setFoldedNodeIds={props.setFoldedNodeIds}
           onClickAddPrefill={props.onClickAddPrefill}
           expandDisabled={props.expandDisabled}
           onClickExpandFromHere={props.onClickExpandFromHere}
@@ -204,10 +212,12 @@ function Tree(props: {
   );
 }
 
-function TreeNode({
+const TreeNode = React.memo(function TreeNode({
   node,
   parents,
   siblings,
+  foldedNodeIds,
+  setFoldedNodeIds,
   parentHasShortDownLine,
   onClickAddPrefill,
   expandDisabled,
@@ -216,6 +226,8 @@ function TreeNode({
   node: Token;
   parents: Token[];
   siblings: Token[];
+  foldedNodeIds: string[];
+  setFoldedNodeIds: (ids: string[]) => void;
   parentHasShortDownLine?: boolean;
   onClickAddPrefill: (id: string) => void;
   expandDisabled: boolean;
@@ -231,6 +243,8 @@ function TreeNode({
   const hasLeftLine = parents.length === 0 ? false : parentHasShortDownLine ? siblings[0] === node : true;
 
   const recoveredEmoji = tryRecoverBrokenEmoji([...parents, node]);
+
+  const isFolded = foldedNodeIds.includes(node.id);
 
   const text = node.text.replaceAll(" ", "␣").replaceAll("\n", "↵");
   return (
@@ -250,9 +264,22 @@ function TreeNode({
           [{node.logprob.toFixed(4)}]{" "}
           {node.branchFinished != null && node.children.length === 0 && `<|${node.branchFinished}|>`}
         </span>{" "}
+        {node.children.length > 0 && (
+          <button
+            className={"node-button" + (isFolded ? " node-button-always-visible" : "")}
+            title={isFolded ? "Unfold node" : "Fold node"}
+            onClick={() =>
+              isFolded
+                ? setFoldedNodeIds(foldedNodeIds.filter((id) => id !== node.id))
+                : setFoldedNodeIds([...foldedNodeIds, node.id])
+            }
+          >
+            {isFolded ? "↕️" : "🤏"}
+          </button>
+        )}{" "}
         <button className="node-button add-prefill" title="Add to prefill" onClick={() => onClickAddPrefill(node.id)}>
           📥
-        </button>
+        </button>{" "}
         <button
           className="node-button expand-from-here"
           disabled={expandDisabled}
@@ -260,9 +287,9 @@ function TreeNode({
           onClick={() => onClickExpandFromHere(node.id)}
         >
           🌱
-        </button>
+        </button>{" "}
       </div>
-      {!!node.children.length && (
+      {!!node.children.length && !isFolded && (
         <ol>
           {node.children.map((c) => (
             <TreeNode
@@ -270,6 +297,8 @@ function TreeNode({
               node={c}
               parents={[...parents, node]}
               siblings={node.children}
+              foldedNodeIds={foldedNodeIds}
+              setFoldedNodeIds={setFoldedNodeIds}
               parentHasShortDownLine={hasShortDownLine}
               onClickAddPrefill={onClickAddPrefill}
               expandDisabled={expandDisabled}
@@ -280,7 +309,7 @@ function TreeNode({
       )}
     </li>
   );
-}
+});
 
 // Settings components
 

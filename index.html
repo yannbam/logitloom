@@ -15,6 +15,38 @@
             }
         }
 
+        .sticky-footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            padding: 0.25rem;
+            display: flex;
+            flex-flow: row wrap;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.75);
+            z-index: 99;
+
+            .spinner {
+                display: inline-block;
+                width: 1em;
+                height: 1em;
+                border: .15em solid currentColor;
+                border-right-color: transparent;
+                border-radius: 50%;
+                animation: s .6s linear infinite
+            }
+
+            .error {
+                color: red;
+            }
+        }
+
+        @keyframes s {
+            to {
+                transform: rotate(1turn)
+            }
+        }
+
         .settings-container {
             display: flex;
             flex-flow: row wrap;
@@ -54,21 +86,6 @@
                 }
             }
 
-            .spinner {
-                display: inline-block;
-                width: 1em;
-                height: 1em;
-                border: .15em solid currentColor;
-                border-right-color: transparent;
-                border-radius: 50%;
-                animation: s .6s linear infinite
-            }
-        }
-
-        @keyframes s {
-            to {
-                transform: rotate(1turn)
-            }
         }
 
         li.tree-node {
@@ -151,7 +168,7 @@
             }
 
             div.tree-node-info:not(:hover) {
-                button.node-button {
+                button.node-button:not(.node-button-always-visible) {
                     display: none;
                 }
             }

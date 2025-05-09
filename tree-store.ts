@@ -10,7 +10,14 @@ let listeners: Array<() => void> = [];
 export interface State {
   running: boolean;
   interrupting: boolean;
-  value: { kind: "tree"; roots: Token[] } | { kind: "error"; error: any };
+  value:
+    | { kind: "tree"; roots: Token[] }
+    | {
+        kind: "error";
+        error: any;
+        /** The previous roots before the error, if they existed. */
+        roots: Token[] | null;
+      };
 }
 let state: State = {
   running: false,
@@ -37,7 +44,7 @@ function getSnapshot(): State {
 
 /** Return the token string for a given token -- all the tokens before it, and itself, joined together. */
 export function getTokenAndPrefix(state: State, id: string): string | null {
-  if (state.value.kind !== "tree") {
+  if (state.value.roots == null) {
     return null;
   }
   const path = pathToNodeWithId(id, state.value.roots);
@@ -107,7 +114,7 @@ export function run(opts: {
       progress,
     });
   } else {
-    if (state.value.kind !== "tree") {
+    if (state.value.roots == null) {
       throw new Error(`ui bug: state missing tree, can't expand '${opts.fromNodeId}' (how did you get this id?)`);
     }
     promise = expandTree(
@@ -138,7 +145,7 @@ export function run(opts: {
       state = {
         running: false,
         interrupting: false,
-        value: { kind: "error", error },
+        value: { kind: "error", error, roots: state.value.roots },
       };
       emitChange();
       console.error(error);
