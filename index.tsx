@@ -121,7 +121,7 @@ function App(): JSX.Element {
           min={0}
           max={100}
           step={5}
-          value={coverProb * 100}
+          value={(coverProb * 100) | 0}
           onChange={(v) => setCoverProb(v / 100)}
         />{" "}
         <button
