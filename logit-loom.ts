@@ -2,13 +2,14 @@ import type {
   ChatCompletion,
   ChatCompletionCreateParamsNonStreaming,
   ChatCompletionMessageParam,
-  ChatCompletionTokenLogprob,
   Completion,
   CompletionChoice,
   CompletionCreateParamsNonStreaming,
 } from "openai/resources/index.mjs";
 import OpenAI from "./openai";
 import * as uuid from "uuid";
+
+import { type ApiInfo } from "./api-sniffer";
 
 export interface Token {
   id: string;
@@ -23,6 +24,7 @@ export interface Token {
 export interface TreeOptions {
   client: InstanceType<typeof OpenAI>;
   baseUrl: string;
+  apiInfo: ApiInfo;
   model: string;
   modelType: "chat" | "base";
   prompt?: string;
@@ -132,6 +134,7 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
   //
   // i hate BPE so much
   const prefill = (opts.prefill ?? "") + tokens.map((t) => t.text).join("");
+  const prefillStyle = opts.apiInfo.prefillStyle;
 
   let response: Completion | ChatCompletion;
   if (opts.modelType === "chat") {
@@ -140,8 +143,7 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
       messages.push({
         role: "assistant",
         content: (opts.prefill ?? "") + tokens.map((t) => t.text).join(""),
-        // deepseek-specific marker for prefill
-        ...(opts.baseUrl.includes("api.deepseek.") ? { prefix: true } : {}),
+        ...(prefillStyle?.kind === "flags" && prefillStyle.target === "message" ? prefillStyle.flags : {}),
       });
     }
     const request: ChatCompletionCreateParamsNonStreaming = {
@@ -150,7 +152,10 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
       logprobs: true,
       top_logprobs: opts.maxWidth,
       max_tokens: opts.depth - tokens.length,
-      temperature: 1.0, // no logit scaling, TODO: only for deepseek?
+      temperature: opts.apiInfo.needsTemperature ?? 0.0,
+      ...(prefillStyle?.kind === "flags" && prefillStyle?.target === "body" && messages.at(-1)?.role === "assistant"
+        ? prefillStyle.flags
+        : {}),
     };
     console.log("chat request:", request);
     response = await opts.client.chat.completions.create(request);
@@ -160,7 +165,7 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
       prompt: opts.prompt + prefill,
       logprobs: opts.maxWidth, // TODO api claims the max for this is 5? probably only for openai?
       max_tokens: opts.depth - tokens.length,
-      temperature: 1.0, // no logit scaling, TODO: only for deepseek?
+      temperature: opts.apiInfo.needsTemperature ?? 0.0,
     };
     console.log("completion request:", request);
     response = await opts.client.completions.create(request);

@@ -5,6 +5,7 @@ import * as uuid from "uuid";
 
 import { type Token } from "./logit-loom";
 import { useTreeStore, run, interruptRun, getTokenAndPrefix, loadTreeFromLocalStorage } from "./tree-store";
+import type { ApiInfo } from "./api-sniffer";
 
 const possibleModelTypes = ["chat", "base"] as const;
 type ModelType = (typeof possibleModelTypes)[number];
@@ -85,6 +86,9 @@ function App(): JSX.Element {
             setCurrentPresetId(preset.id);
           }}
         />
+        {!!baseUrl && store.baseUrlApiInfoCache[baseUrl] != null && (
+          <ShowAPIWarning apiInfo={store.baseUrlApiInfoCache[baseUrl]} modelName={modelName} modelType={modelType} />
+        )}
       </Settings>
       <hr />
       <Settings>
@@ -590,6 +594,55 @@ function EditPresetsDialogRow(props: {
         Delete
       </button>
     </>
+  );
+}
+
+function ShowAPIWarning({
+  apiInfo,
+  modelName,
+  modelType,
+}: {
+  apiInfo: ApiInfo;
+  modelName?: string;
+  modelType: "chat" | "base";
+}): JSX.Element {
+  const modelIsSupported =
+    apiInfo.onlySupportsModels == null || !modelName || apiInfo.onlySupportsModels.includes(modelName);
+
+  const warnings: string[] = [];
+  if (modelType === "chat" && apiInfo.supportsPrefill !== "yes") {
+    warnings.push(
+      apiInfo.supportsPrefill === "no"
+        ? "This provider doesn't support assistant prefill, which is required by LogitLoom"
+        : "This provider may not support assistant prefill for some/all models (tagged 'unknown')"
+    );
+  }
+  if (apiInfo.supportsLogprobs !== "yes") {
+    warnings.push(
+      apiInfo.supportsLogprobs === "no"
+        ? "This provider doesn't support logprobs, which are required by LogitLoom"
+        : "This provider may not support logprobs for some/all models (tagged 'unknown')"
+    );
+  }
+  if (!modelIsSupported) {
+    warnings.push(`The model ${modelName} is not tagged as a supported model for this provider.`);
+  }
+  if (apiInfo.extraWarning != null) {
+    warnings.push(apiInfo.extraWarning);
+  }
+
+  const sev = apiInfo.supportsPrefill === "no" || apiInfo.supportsLogprobs === "no" ? "❌ Critical" : "⚠️ Warning";
+
+  return warnings.length === 0 ? (
+    <div></div>
+  ) : (
+    <div className="api-warning">
+      {sev}:{" "}
+      <small>
+        Detected provider <strong>{apiInfo.provider}</strong>.{" "}
+        {warnings.length === 1 ? warnings[0] + "." : warnings.join(". ")}
+      </small>
+    </div>
   );
 }
 

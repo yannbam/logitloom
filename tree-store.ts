@@ -1,6 +1,8 @@
-import OpenAI from "./openai";
-import { buildTree, expandTree, pathToNodeWithId, type Token } from "./logit-loom";
 import { useSyncExternalStore } from "react";
+import OpenAI from "./openai";
+
+import { buildTree, expandTree, pathToNodeWithId, type Token } from "./logit-loom";
+import { type ApiInfo, sniffApi } from "./api-sniffer";
 
 export function useTreeStore(): State {
   return useSyncExternalStore(subscribe, getSnapshot);
@@ -18,11 +20,13 @@ export interface State {
         /** The previous roots before the error, if they existed. */
         roots: Token[] | null;
       };
+  baseUrlApiInfoCache: Record<string, ApiInfo>;
 }
 let state: State = {
   running: false,
   interrupting: false,
   value: { kind: "tree", roots: [] },
+  baseUrlApiInfoCache: {},
 };
 
 function subscribe(listener: () => void): () => void {
@@ -92,6 +96,21 @@ export function run(opts: {
   state = { ...state, running: true };
   emitChange();
 
+  async function getApiInfo(): Promise<ApiInfo> {
+    if (!isProbablyLocalhost(opts.baseUrl)) {
+      // don't *use* cache for localhost because it's liable to change if the user runs a new server
+      // but we still store it for the UI to render warnings
+      const cachedApiInfo = state.baseUrlApiInfoCache[opts.baseUrl];
+      if (cachedApiInfo != null) {
+        return cachedApiInfo;
+      }
+    }
+    const apiInfo = await sniffApi(opts.baseUrl, opts.apiKey);
+    state = { ...state, baseUrlApiInfoCache: { ...state.baseUrlApiInfoCache, [opts.baseUrl]: apiInfo } };
+    emitChange();
+    return apiInfo;
+  }
+
   function progress(roots: Token[]) {
     state = { ...state, value: { kind: "tree", roots } };
     trySyncTreeToLocalStorage(roots);
@@ -100,27 +119,13 @@ export function run(opts: {
   }
 
   let promise: Promise<Token[]>;
-  if (opts.fromNodeId == null) {
-    promise = buildTree({
-      client,
-      baseUrl: opts.baseUrl,
-      model: opts.modelName,
-      modelType: opts.modelType,
-      prompt: opts.prompt,
-      prefill: opts.prefill,
-      depth: opts.depth,
-      maxWidth: opts.maxWidth,
-      coverProb: opts.coverProb,
-      progress,
-    });
-  } else {
-    if (state.value.roots == null) {
-      throw new Error(`ui bug: state missing tree, can't expand '${opts.fromNodeId}' (how did you get this id?)`);
-    }
-    promise = expandTree(
-      {
+  const fromNodeId = opts.fromNodeId;
+  if (fromNodeId == null) {
+    promise = getApiInfo().then((apiInfo) =>
+      buildTree({
         client,
         baseUrl: opts.baseUrl,
+        apiInfo,
         model: opts.modelName,
         modelType: opts.modelType,
         prompt: opts.prompt,
@@ -129,20 +134,43 @@ export function run(opts: {
         maxWidth: opts.maxWidth,
         coverProb: opts.coverProb,
         progress,
-      },
-      state.value.roots,
-      opts.fromNodeId
+      })
+    );
+  } else {
+    const roots = state.value.roots;
+    if (roots == null) {
+      throw new Error(`ui bug: state missing tree, can't expand '${opts.fromNodeId}' (how did you get this id?)`);
+    }
+    promise = getApiInfo().then((apiInfo) =>
+      expandTree(
+        {
+          client,
+          baseUrl: opts.baseUrl,
+          apiInfo,
+          model: opts.modelName,
+          modelType: opts.modelType,
+          prompt: opts.prompt,
+          prefill: opts.prefill,
+          depth: opts.depth,
+          maxWidth: opts.maxWidth,
+          coverProb: opts.coverProb,
+          progress,
+        },
+        roots,
+        fromNodeId
+      )
     );
   }
 
   promise
     .then((roots) => {
-      state = { value: { kind: "tree", roots }, running: false, interrupting: false };
+      state = { ...state, value: { kind: "tree", roots }, running: false, interrupting: false };
       trySyncTreeToLocalStorage(roots);
       emitChange();
     })
     .catch((error) => {
       state = {
+        ...state,
         running: false,
         interrupting: false,
         value: { kind: "error", error, roots: state.value.roots },
@@ -182,4 +210,13 @@ function trySyncTreeToLocalStorage(roots: Token[]) {
   } catch (e) {
     console.error("persisting tree to localStorage:", e);
   }
+}
+
+function isProbablyLocalhost(url: string): boolean {
+  return (
+    url.includes("//localhost") ||
+    url.includes("//127.0.0") ||
+    url.includes("//[::1]") ||
+    url.includes("//[0:0:0:0:0:0:0:1")
+  );
 }

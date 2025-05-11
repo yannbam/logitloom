@@ -54,6 +54,7 @@
             flex-flow: row wrap;
             justify-content: flex-start;
             gap: 0.75rem;
+            font-size: 80%;
 
             >:is(label, button) {
                 flex: 1 1 auto;
@@ -70,7 +71,6 @@
 
                 >span {
                     text-wrap: nowrap;
-                    font-size: 80%;
                 }
 
                 >textarea,
@@ -78,9 +78,6 @@
                     flex: 1 1 auto;
                 }
 
-                >input {
-                    max-height: 2em;
-                }
 
                 >input[type=number] {
                     max-width: 4em;
@@ -88,6 +85,20 @@
                 }
             }
 
+            >label>input,
+            >label>select,
+            >button {
+                max-height: 2em;
+            }
+
+            .api-warning {
+                flex-basis: 100%;
+                small {
+                    font-size: 80%; /* of prior 80% */
+                }
+            }
+
+        }
 
         #tree-container {
             overflow-x: auto;
