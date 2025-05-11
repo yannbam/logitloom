@@ -9,9 +9,10 @@
     "allowJs": true,
 
     // Bundler mode
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "noEmit": true,
 
     // Best practices
@@ -24,5 +25,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
-  }
+  },
+  "include": ["*.ts", "*.tsx"],
+  "exclude": ["node_modules", "dist"]
 }

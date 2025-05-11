@@ -3,9 +3,9 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
-// node_modules/openai/internal/qs/formats.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/formats.js
 var require_formats = __commonJS({
-  "node_modules/openai/internal/qs/formats.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/formats.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.RFC3986 = exports.RFC1738 = exports.formatters = exports.default_format = void 0;
@@ -19,9 +19,9 @@ var require_formats = __commonJS({
   }
 });
 
-// node_modules/openai/internal/qs/utils.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/utils.js
 var require_utils = __commonJS({
-  "node_modules/openai/internal/qs/utils.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.maybe_map = exports.combine = exports.is_buffer = exports.is_regexp = exports.compact = exports.encode = exports.decode = exports.assign_single_source = exports.merge = void 0;
@@ -232,9 +232,9 @@ var require_utils = __commonJS({
   }
 });
 
-// node_modules/openai/internal/qs/stringify.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/stringify.js
 var require_stringify = __commonJS({
-  "node_modules/openai/internal/qs/stringify.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/stringify.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.stringify = void 0;
@@ -523,9 +523,9 @@ var require_stringify = __commonJS({
   }
 });
 
-// node_modules/openai/internal/qs/index.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/index.js
 var require_qs = __commonJS({
-  "node_modules/openai/internal/qs/index.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/qs/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.formats = exports.stringify = void 0;
@@ -544,19 +544,19 @@ var require_qs = __commonJS({
   }
 });
 
-// node_modules/openai/version.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/version.js
 var require_version = __commonJS({
-  "node_modules/openai/version.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/version.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.VERSION = void 0;
-    exports.VERSION = "4.97.0";
+    exports.VERSION = "4.98.0";
   }
 });
 
-// node_modules/openai/_shims/registry.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/registry.js
 var require_registry = __commonJS({
-  "node_modules/openai/_shims/registry.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/registry.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.setShims = exports.isFsReadStream = exports.fileFromPath = exports.getDefaultAgent = exports.getMultipartRequestOptions = exports.ReadableStream = exports.File = exports.Blob = exports.FormData = exports.Headers = exports.Response = exports.Request = exports.fetch = exports.kind = exports.auto = void 0;
@@ -600,9 +600,9 @@ var require_registry = __commonJS({
   }
 });
 
-// node_modules/openai/_shims/MultipartBody.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/MultipartBody.js
 var require_MultipartBody = __commonJS({
-  "node_modules/openai/_shims/MultipartBody.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/MultipartBody.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.MultipartBody = void 0;
@@ -618,9 +618,9 @@ var require_MultipartBody = __commonJS({
   }
 });
 
-// node_modules/openai/_shims/web-runtime.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/web-runtime.js
 var require_web_runtime = __commonJS({
-  "node_modules/openai/_shims/web-runtime.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/web-runtime.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getRuntime = void 0;
@@ -692,9 +692,9 @@ var require_web_runtime = __commonJS({
   }
 });
 
-// node_modules/openai/_shims/auto/runtime.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/auto/runtime.js
 var require_runtime = __commonJS({
-  "node_modules/openai/_shims/auto/runtime.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/auto/runtime.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -717,9 +717,9 @@ var require_runtime = __commonJS({
   }
 });
 
-// node_modules/openai/_shims/index.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/index.js
 var require_shims = __commonJS({
-  "node_modules/openai/_shims/index.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_shims/index.js"(exports) {
     var shims = require_registry();
     var auto = require_runtime();
     exports.init = () => {
@@ -736,9 +736,9 @@ var require_shims = __commonJS({
   }
 });
 
-// node_modules/openai/error.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/error.js
 var require_error = __commonJS({
-  "node_modules/openai/error.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/error.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ContentFilterFinishReasonError = exports.LengthFinishReasonError = exports.InternalServerError = exports.RateLimitError = exports.UnprocessableEntityError = exports.ConflictError = exports.NotFoundError = exports.PermissionDeniedError = exports.AuthenticationError = exports.BadRequestError = exports.APIConnectionTimeoutError = exports.APIConnectionError = exports.APIUserAbortError = exports.APIError = exports.OpenAIError = void 0;
@@ -863,9 +863,9 @@ var require_error = __commonJS({
   }
 });
 
-// node_modules/openai/internal/decoders/line.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/decoders/line.js
 var require_line = __commonJS({
-  "node_modules/openai/internal/decoders/line.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/decoders/line.js"(exports) {
     "use strict";
     var __classPrivateFieldSet = exports && exports.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
       if (kind === "m") throw new TypeError("Private method is not writable");
@@ -985,9 +985,9 @@ var require_line = __commonJS({
   }
 });
 
-// node_modules/openai/internal/stream-utils.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/stream-utils.js
 var require_stream_utils = __commonJS({
-  "node_modules/openai/internal/stream-utils.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/internal/stream-utils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ReadableStreamToAsyncIterable = void 0;
@@ -1022,9 +1022,9 @@ var require_stream_utils = __commonJS({
   }
 });
 
-// node_modules/openai/streaming.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/streaming.js
 var require_streaming = __commonJS({
-  "node_modules/openai/streaming.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/streaming.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports._iterSSEMessages = exports.Stream = void 0;
@@ -1289,9 +1289,9 @@ var require_streaming = __commonJS({
   }
 });
 
-// node_modules/openai/uploads.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/uploads.js
 var require_uploads = __commonJS({
-  "node_modules/openai/uploads.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/uploads.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.createForm = exports.multipartFormRequestOptions = exports.maybeMultipartFormRequestOptions = exports.isMultipartBody = exports.toFile = exports.isUploadable = exports.isBlobLike = exports.isFileLike = exports.isResponseLike = exports.fileFromPath = void 0;
@@ -1419,9 +1419,9 @@ var require_uploads = __commonJS({
   }
 });
 
-// node_modules/openai/core.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/core.js
 var require_core = __commonJS({
-  "node_modules/openai/core.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/core.js"(exports) {
     "use strict";
     var __classPrivateFieldSet = exports && exports.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
       if (kind === "m") throw new TypeError("Private method is not writable");
@@ -2301,9 +2301,9 @@ var require_core = __commonJS({
   }
 });
 
-// node_modules/openai/pagination.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/pagination.js
 var require_pagination = __commonJS({
-  "node_modules/openai/pagination.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/pagination.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.CursorPage = exports.Page = void 0;
@@ -2373,9 +2373,9 @@ var require_pagination = __commonJS({
   }
 });
 
-// node_modules/openai/resource.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resource.js
 var require_resource = __commonJS({
-  "node_modules/openai/resource.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resource.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.APIResource = void 0;
@@ -2388,9 +2388,9 @@ var require_resource = __commonJS({
   }
 });
 
-// node_modules/openai/resources/chat/completions/messages.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/messages.js
 var require_messages = __commonJS({
-  "node_modules/openai/resources/chat/completions/messages.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/messages.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ChatCompletionStoreMessagesPage = exports.Messages = void 0;
@@ -2412,9 +2412,9 @@ var require_messages = __commonJS({
   }
 });
 
-// node_modules/openai/resources/chat/completions/completions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/completions.js
 var require_completions = __commonJS({
-  "node_modules/openai/resources/chat/completions/completions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/completions.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -2461,6 +2461,12 @@ var require_completions = __commonJS({
       /**
        * Get a stored chat completion. Only Chat Completions that have been created with
        * the `store` parameter set to `true` will be returned.
+       *
+       * @example
+       * ```ts
+       * const chatCompletion =
+       *   await client.chat.completions.retrieve('completion_id');
+       * ```
        */
       retrieve(completionId, options) {
         return this._client.get(`/chat/completions/${completionId}`, options);
@@ -2469,6 +2475,14 @@ var require_completions = __commonJS({
        * Modify a stored chat completion. Only Chat Completions that have been created
        * with the `store` parameter set to `true` can be modified. Currently, the only
        * supported modification is to update the `metadata` field.
+       *
+       * @example
+       * ```ts
+       * const chatCompletion = await client.chat.completions.update(
+       *   'completion_id',
+       *   { metadata: { foo: 'string' } },
+       * );
+       * ```
        */
       update(completionId, body, options) {
         return this._client.post(`/chat/completions/${completionId}`, { body, ...options });
@@ -2482,6 +2496,12 @@ var require_completions = __commonJS({
       /**
        * Delete a stored chat completion. Only Chat Completions that have been created
        * with the `store` parameter set to `true` can be deleted.
+       *
+       * @example
+       * ```ts
+       * const chatCompletionDeleted =
+       *   await client.chat.completions.del('completion_id');
+       * ```
        */
       del(completionId, options) {
         return this._client.delete(`/chat/completions/${completionId}`, options);
@@ -2499,9 +2519,9 @@ var require_completions = __commonJS({
   }
 });
 
-// node_modules/openai/resources/chat/chat.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/chat.js
 var require_chat = __commonJS({
-  "node_modules/openai/resources/chat/chat.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/chat.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -2547,9 +2567,9 @@ var require_chat = __commonJS({
   }
 });
 
-// node_modules/openai/resources/chat/completions/index.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/index.js
 var require_completions2 = __commonJS({
-  "node_modules/openai/resources/chat/completions/index.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/completions/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Messages = exports.Completions = exports.ChatCompletionsPage = exports.ChatCompletionStoreMessagesPage = void 0;
@@ -2570,9 +2590,9 @@ var require_completions2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/chat/index.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/index.js
 var require_chat2 = __commonJS({
-  "node_modules/openai/resources/chat/index.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/chat/index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Completions = exports.ChatCompletionsPage = exports.ChatCompletionStoreMessagesPage = exports.Chat = void 0;
@@ -2593,17 +2613,17 @@ var require_chat2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/shared.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/shared.js
 var require_shared = __commonJS({
-  "node_modules/openai/resources/shared.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/shared.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
   }
 });
 
-// node_modules/openai/resources/audio/speech.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/speech.js
 var require_speech = __commonJS({
-  "node_modules/openai/resources/audio/speech.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/speech.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Speech = void 0;
@@ -2611,6 +2631,18 @@ var require_speech = __commonJS({
     var Speech = class extends resource_1.APIResource {
       /**
        * Generates audio from the input text.
+       *
+       * @example
+       * ```ts
+       * const speech = await client.audio.speech.create({
+       *   input: 'input',
+       *   model: 'string',
+       *   voice: 'ash',
+       * });
+       *
+       * const content = await speech.blob();
+       * console.log(content);
+       * ```
        */
       create(body, options) {
         return this._client.post("/audio/speech", {
@@ -2625,9 +2657,9 @@ var require_speech = __commonJS({
   }
 });
 
-// node_modules/openai/resources/audio/transcriptions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/transcriptions.js
 var require_transcriptions = __commonJS({
-  "node_modules/openai/resources/audio/transcriptions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/transcriptions.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -2674,9 +2706,9 @@ var require_transcriptions = __commonJS({
   }
 });
 
-// node_modules/openai/resources/audio/translations.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/translations.js
 var require_translations = __commonJS({
-  "node_modules/openai/resources/audio/translations.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/translations.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -2718,9 +2750,9 @@ var require_translations = __commonJS({
   }
 });
 
-// node_modules/openai/resources/audio/audio.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/audio.js
 var require_audio = __commonJS({
-  "node_modules/openai/resources/audio/audio.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/audio/audio.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -2773,9 +2805,9 @@ var require_audio = __commonJS({
   }
 });
 
-// node_modules/openai/resources/batches.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/batches.js
 var require_batches = __commonJS({
-  "node_modules/openai/resources/batches.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/batches.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.BatchesPage = exports.Batches = void 0;
@@ -2818,9 +2850,9 @@ var require_batches = __commonJS({
   }
 });
 
-// node_modules/openai/lib/EventStream.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/EventStream.js
 var require_EventStream = __commonJS({
-  "node_modules/openai/lib/EventStream.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/EventStream.js"(exports) {
     "use strict";
     var __classPrivateFieldSet = exports && exports.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
       if (kind === "m") throw new TypeError("Private method is not writable");
@@ -3027,9 +3059,9 @@ var require_EventStream = __commonJS({
   }
 });
 
-// node_modules/openai/lib/AssistantStream.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/AssistantStream.js
 var require_AssistantStream = __commonJS({
-  "node_modules/openai/lib/AssistantStream.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/AssistantStream.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -3614,9 +3646,9 @@ var require_AssistantStream = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/assistants.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/assistants.js
 var require_assistants = __commonJS({
-  "node_modules/openai/resources/beta/assistants.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/assistants.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.AssistantsPage = exports.Assistants = void 0;
@@ -3627,6 +3659,13 @@ var require_assistants = __commonJS({
     var Assistants = class extends resource_1.APIResource {
       /**
        * Create an assistant with a model and instructions.
+       *
+       * @example
+       * ```ts
+       * const assistant = await client.beta.assistants.create({
+       *   model: 'gpt-4o',
+       * });
+       * ```
        */
       create(body, options) {
         return this._client.post("/assistants", {
@@ -3637,6 +3676,13 @@ var require_assistants = __commonJS({
       }
       /**
        * Retrieves an assistant.
+       *
+       * @example
+       * ```ts
+       * const assistant = await client.beta.assistants.retrieve(
+       *   'assistant_id',
+       * );
+       * ```
        */
       retrieve(assistantId, options) {
         return this._client.get(`/assistants/${assistantId}`, {
@@ -3646,6 +3692,13 @@ var require_assistants = __commonJS({
       }
       /**
        * Modifies an assistant.
+       *
+       * @example
+       * ```ts
+       * const assistant = await client.beta.assistants.update(
+       *   'assistant_id',
+       * );
+       * ```
        */
       update(assistantId, body, options) {
         return this._client.post(`/assistants/${assistantId}`, {
@@ -3666,6 +3719,13 @@ var require_assistants = __commonJS({
       }
       /**
        * Delete an assistant.
+       *
+       * @example
+       * ```ts
+       * const assistantDeleted = await client.beta.assistants.del(
+       *   'assistant_id',
+       * );
+       * ```
        */
       del(assistantId, options) {
         return this._client.delete(`/assistants/${assistantId}`, {
@@ -3682,9 +3742,9 @@ var require_assistants = __commonJS({
   }
 });
 
-// node_modules/openai/lib/RunnableFunction.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/RunnableFunction.js
 var require_RunnableFunction = __commonJS({
-  "node_modules/openai/lib/RunnableFunction.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/RunnableFunction.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ParsingToolFunction = exports.ParsingFunction = exports.isRunnableFunctionWithParse = void 0;
@@ -3712,9 +3772,9 @@ var require_RunnableFunction = __commonJS({
   }
 });
 
-// node_modules/openai/lib/chatCompletionUtils.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/chatCompletionUtils.js
 var require_chatCompletionUtils = __commonJS({
-  "node_modules/openai/lib/chatCompletionUtils.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/chatCompletionUtils.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.isPresent = exports.isToolMessage = exports.isFunctionMessage = exports.isAssistantMessage = void 0;
@@ -3737,9 +3797,9 @@ var require_chatCompletionUtils = __commonJS({
   }
 });
 
-// node_modules/openai/lib/parser.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/parser.js
 var require_parser = __commonJS({
-  "node_modules/openai/lib/parser.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.validateInputTools = exports.hasAutoParseableInput = exports.shouldParseToolCall = exports.parseChatCompletion = exports.maybeParseChatCompletion = exports.isAutoParsableTool = exports.makeParseableTool = exports.isAutoParsableResponseFormat = exports.makeParseableTextFormat = exports.makeParseableResponseFormat = void 0;
@@ -3894,9 +3954,9 @@ var require_parser = __commonJS({
   }
 });
 
-// node_modules/openai/lib/AbstractChatCompletionRunner.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/AbstractChatCompletionRunner.js
 var require_AbstractChatCompletionRunner = __commonJS({
-  "node_modules/openai/lib/AbstractChatCompletionRunner.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/AbstractChatCompletionRunner.js"(exports) {
     "use strict";
     var __classPrivateFieldGet = exports && exports.__classPrivateFieldGet || function(receiver, state, kind, f) {
       if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
@@ -4253,9 +4313,9 @@ var require_AbstractChatCompletionRunner = __commonJS({
   }
 });
 
-// node_modules/openai/lib/ChatCompletionRunner.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionRunner.js
 var require_ChatCompletionRunner = __commonJS({
-  "node_modules/openai/lib/ChatCompletionRunner.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionRunner.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ChatCompletionRunner = void 0;
@@ -4292,9 +4352,9 @@ var require_ChatCompletionRunner = __commonJS({
   }
 });
 
-// node_modules/openai/_vendor/partial-json-parser/parser.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/_vendor/partial-json-parser/parser.js
 var require_parser2 = __commonJS({
-  "node_modules/openai/_vendor/partial-json-parser/parser.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/_vendor/partial-json-parser/parser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.MalformedJSON = exports.PartialJSON = exports.partialParse = void 0;
@@ -4514,9 +4574,9 @@ var require_parser2 = __commonJS({
   }
 });
 
-// node_modules/openai/lib/ChatCompletionStream.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionStream.js
 var require_ChatCompletionStream = __commonJS({
-  "node_modules/openai/lib/ChatCompletionStream.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionStream.js"(exports) {
     "use strict";
     var __classPrivateFieldSet = exports && exports.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
       if (kind === "m") throw new TypeError("Private method is not writable");
@@ -5018,9 +5078,9 @@ ${str(snapshot)}`);
   }
 });
 
-// node_modules/openai/lib/ChatCompletionStreamingRunner.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionStreamingRunner.js
 var require_ChatCompletionStreamingRunner = __commonJS({
-  "node_modules/openai/lib/ChatCompletionStreamingRunner.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ChatCompletionStreamingRunner.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ChatCompletionStreamingRunner = void 0;
@@ -5058,9 +5118,9 @@ var require_ChatCompletionStreamingRunner = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/chat/completions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/chat/completions.js
 var require_completions3 = __commonJS({
-  "node_modules/openai/resources/beta/chat/completions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/chat/completions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Completions = exports.ChatCompletionRunner = exports.ChatCompletionStream = exports.ParsingToolFunction = exports.ParsingFunction = exports.ChatCompletionStreamingRunner = void 0;
@@ -5122,9 +5182,9 @@ var require_completions3 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/chat/chat.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/chat/chat.js
 var require_chat3 = __commonJS({
-  "node_modules/openai/resources/beta/chat/chat.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/chat/chat.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5170,9 +5230,9 @@ var require_chat3 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/realtime/sessions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/sessions.js
 var require_sessions = __commonJS({
-  "node_modules/openai/resources/beta/realtime/sessions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/sessions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Sessions = void 0;
@@ -5186,6 +5246,12 @@ var require_sessions = __commonJS({
        * It responds with a session object, plus a `client_secret` key which contains a
        * usable ephemeral API token that can be used to authenticate browser clients for
        * the Realtime API.
+       *
+       * @example
+       * ```ts
+       * const session =
+       *   await client.beta.realtime.sessions.create();
+       * ```
        */
       create(body, options) {
         return this._client.post("/realtime/sessions", {
@@ -5199,9 +5265,9 @@ var require_sessions = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/realtime/transcription-sessions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/transcription-sessions.js
 var require_transcription_sessions = __commonJS({
-  "node_modules/openai/resources/beta/realtime/transcription-sessions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/transcription-sessions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.TranscriptionSessions = void 0;
@@ -5215,6 +5281,12 @@ var require_transcription_sessions = __commonJS({
        * It responds with a session object, plus a `client_secret` key which contains a
        * usable ephemeral API token that can be used to authenticate browser clients for
        * the Realtime API.
+       *
+       * @example
+       * ```ts
+       * const transcriptionSession =
+       *   await client.beta.realtime.transcriptionSessions.create();
+       * ```
        */
       create(body, options) {
         return this._client.post("/realtime/transcription_sessions", {
@@ -5228,9 +5300,9 @@ var require_transcription_sessions = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/realtime/realtime.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/realtime.js
 var require_realtime = __commonJS({
-  "node_modules/openai/resources/beta/realtime/realtime.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/realtime/realtime.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5279,9 +5351,9 @@ var require_realtime = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/threads/messages.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/messages.js
 var require_messages2 = __commonJS({
-  "node_modules/openai/resources/beta/threads/messages.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/messages.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.MessagesPage = exports.Messages = void 0;
@@ -5291,6 +5363,14 @@ var require_messages2 = __commonJS({
     var Messages = class extends resource_1.APIResource {
       /**
        * Create a message.
+       *
+       * @example
+       * ```ts
+       * const message = await client.beta.threads.messages.create(
+       *   'thread_id',
+       *   { content: 'string', role: 'user' },
+       * );
+       * ```
        */
       create(threadId, body, options) {
         return this._client.post(`/threads/${threadId}/messages`, {
@@ -5301,6 +5381,14 @@ var require_messages2 = __commonJS({
       }
       /**
        * Retrieve a message.
+       *
+       * @example
+       * ```ts
+       * const message = await client.beta.threads.messages.retrieve(
+       *   'thread_id',
+       *   'message_id',
+       * );
+       * ```
        */
       retrieve(threadId, messageId, options) {
         return this._client.get(`/threads/${threadId}/messages/${messageId}`, {
@@ -5310,6 +5398,14 @@ var require_messages2 = __commonJS({
       }
       /**
        * Modifies a message.
+       *
+       * @example
+       * ```ts
+       * const message = await client.beta.threads.messages.update(
+       *   'thread_id',
+       *   'message_id',
+       * );
+       * ```
        */
       update(threadId, messageId, body, options) {
         return this._client.post(`/threads/${threadId}/messages/${messageId}`, {
@@ -5330,6 +5426,15 @@ var require_messages2 = __commonJS({
       }
       /**
        * Deletes a message.
+       *
+       * @example
+       * ```ts
+       * const messageDeleted =
+       *   await client.beta.threads.messages.del(
+       *     'thread_id',
+       *     'message_id',
+       *   );
+       * ```
        */
       del(threadId, messageId, options) {
         return this._client.delete(`/threads/${threadId}/messages/${messageId}`, {
@@ -5346,9 +5451,9 @@ var require_messages2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/threads/runs/steps.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/runs/steps.js
 var require_steps = __commonJS({
-  "node_modules/openai/resources/beta/threads/runs/steps.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/runs/steps.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.RunStepsPage = exports.Steps = void 0;
@@ -5385,9 +5490,9 @@ var require_steps = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/threads/runs/runs.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/runs/runs.js
 var require_runs = __commonJS({
-  "node_modules/openai/resources/beta/threads/runs/runs.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/runs/runs.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5442,6 +5547,14 @@ var require_runs = __commonJS({
       }
       /**
        * Retrieves a run.
+       *
+       * @example
+       * ```ts
+       * const run = await client.beta.threads.runs.retrieve(
+       *   'thread_id',
+       *   'run_id',
+       * );
+       * ```
        */
       retrieve(threadId, runId, options) {
         return this._client.get(`/threads/${threadId}/runs/${runId}`, {
@@ -5451,6 +5564,14 @@ var require_runs = __commonJS({
       }
       /**
        * Modifies a run.
+       *
+       * @example
+       * ```ts
+       * const run = await client.beta.threads.runs.update(
+       *   'thread_id',
+       *   'run_id',
+       * );
+       * ```
        */
       update(threadId, runId, body, options) {
         return this._client.post(`/threads/${threadId}/runs/${runId}`, {
@@ -5471,6 +5592,14 @@ var require_runs = __commonJS({
       }
       /**
        * Cancels a run that is `in_progress`.
+       *
+       * @example
+       * ```ts
+       * const run = await client.beta.threads.runs.cancel(
+       *   'thread_id',
+       *   'run_id',
+       * );
+       * ```
        */
       cancel(threadId, runId, options) {
         return this._client.post(`/threads/${threadId}/runs/${runId}/cancel`, {
@@ -5511,7 +5640,6 @@ var require_runs = __commonJS({
             headers: { ...options?.headers, ...headers }
           }).withResponse();
           switch (run.status) {
-            //If we are in any sort of intermediate state we poll
             case "queued":
             case "in_progress":
             case "cancelling":
@@ -5529,7 +5657,6 @@ var require_runs = __commonJS({
               }
               await (0, core_2.sleep)(sleepInterval);
               break;
-            //We return the run in any terminal state.
             case "requires_action":
             case "incomplete":
             case "cancelled":
@@ -5582,9 +5709,9 @@ var require_runs = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/threads/threads.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/threads.js
 var require_threads = __commonJS({
-  "node_modules/openai/resources/beta/threads/threads.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/threads/threads.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5640,6 +5767,13 @@ var require_threads = __commonJS({
       }
       /**
        * Retrieves a thread.
+       *
+       * @example
+       * ```ts
+       * const thread = await client.beta.threads.retrieve(
+       *   'thread_id',
+       * );
+       * ```
        */
       retrieve(threadId, options) {
         return this._client.get(`/threads/${threadId}`, {
@@ -5649,6 +5783,13 @@ var require_threads = __commonJS({
       }
       /**
        * Modifies a thread.
+       *
+       * @example
+       * ```ts
+       * const thread = await client.beta.threads.update(
+       *   'thread_id',
+       * );
+       * ```
        */
       update(threadId, body, options) {
         return this._client.post(`/threads/${threadId}`, {
@@ -5659,6 +5800,13 @@ var require_threads = __commonJS({
       }
       /**
        * Delete a thread.
+       *
+       * @example
+       * ```ts
+       * const threadDeleted = await client.beta.threads.del(
+       *   'thread_id',
+       * );
+       * ```
        */
       del(threadId, options) {
         return this._client.delete(`/threads/${threadId}`, {
@@ -5698,9 +5846,9 @@ var require_threads = __commonJS({
   }
 });
 
-// node_modules/openai/resources/beta/beta.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/beta.js
 var require_beta = __commonJS({
-  "node_modules/openai/resources/beta/beta.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/beta/beta.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5757,9 +5905,9 @@ var require_beta = __commonJS({
   }
 });
 
-// node_modules/openai/resources/completions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/completions.js
 var require_completions4 = __commonJS({
-  "node_modules/openai/resources/completions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/completions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Completions = void 0;
@@ -5773,9 +5921,9 @@ var require_completions4 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/embeddings.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/embeddings.js
 var require_embeddings = __commonJS({
-  "node_modules/openai/resources/embeddings.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/embeddings.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5811,6 +5959,15 @@ var require_embeddings = __commonJS({
     var Embeddings = class extends resource_1.APIResource {
       /**
        * Creates an embedding vector representing the input text.
+       *
+       * @example
+       * ```ts
+       * const createEmbeddingResponse =
+       *   await client.embeddings.create({
+       *     input: 'The quick brown fox jumped over the lazy dog',
+       *     model: 'text-embedding-3-small',
+       *   });
+       * ```
        */
       create(body, options) {
         const hasUserProvidedEncodingFormat = !!body.encoding_format;
@@ -5844,9 +6001,9 @@ var require_embeddings = __commonJS({
   }
 });
 
-// node_modules/openai/resources/evals/runs/output-items.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/runs/output-items.js
 var require_output_items = __commonJS({
-  "node_modules/openai/resources/evals/runs/output-items.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/runs/output-items.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.OutputItemListResponsesPage = exports.OutputItems = void 0;
@@ -5875,9 +6032,9 @@ var require_output_items = __commonJS({
   }
 });
 
-// node_modules/openai/resources/evals/runs/runs.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/runs/runs.js
 var require_runs2 = __commonJS({
-  "node_modules/openai/resources/evals/runs/runs.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/runs/runs.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -5959,9 +6116,9 @@ var require_runs2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/evals/evals.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/evals.js
 var require_evals = __commonJS({
-  "node_modules/openai/resources/evals/evals.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/evals/evals.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6047,9 +6204,9 @@ var require_evals = __commonJS({
   }
 });
 
-// node_modules/openai/resources/files.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/files.js
 var require_files = __commonJS({
-  "node_modules/openai/resources/files.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/files.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6176,9 +6333,123 @@ var require_files = __commonJS({
   }
 });
 
-// node_modules/openai/resources/fine-tuning/checkpoints/permissions.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/methods.js
+var require_methods = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/methods.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Methods = void 0;
+    var resource_1 = require_resource();
+    var Methods = class extends resource_1.APIResource {
+    };
+    exports.Methods = Methods;
+  }
+});
+
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/alpha/graders.js
+var require_graders = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/alpha/graders.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Graders = void 0;
+    var resource_1 = require_resource();
+    var Graders = class extends resource_1.APIResource {
+      /**
+       * Run a grader.
+       *
+       * @example
+       * ```ts
+       * const response = await client.fineTuning.alpha.graders.run({
+       *   grader: {
+       *     input: 'input',
+       *     name: 'name',
+       *     operation: 'eq',
+       *     reference: 'reference',
+       *     type: 'string_check',
+       *   },
+       *   model_sample: 'model_sample',
+       *   reference_answer: 'string',
+       * });
+       * ```
+       */
+      run(body, options) {
+        return this._client.post("/fine_tuning/alpha/graders/run", { body, ...options });
+      }
+      /**
+       * Validate a grader.
+       *
+       * @example
+       * ```ts
+       * const response =
+       *   await client.fineTuning.alpha.graders.validate({
+       *     grader: {
+       *       input: 'input',
+       *       name: 'name',
+       *       operation: 'eq',
+       *       reference: 'reference',
+       *       type: 'string_check',
+       *     },
+       *   });
+       * ```
+       */
+      validate(body, options) {
+        return this._client.post("/fine_tuning/alpha/graders/validate", { body, ...options });
+      }
+    };
+    exports.Graders = Graders;
+  }
+});
+
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/alpha/alpha.js
+var require_alpha = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/alpha/alpha.js"(exports) {
+    "use strict";
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Alpha = void 0;
+    var resource_1 = require_resource();
+    var GradersAPI = __importStar(require_graders());
+    var graders_1 = require_graders();
+    var Alpha = class extends resource_1.APIResource {
+      constructor() {
+        super(...arguments);
+        this.graders = new GradersAPI.Graders(this._client);
+      }
+    };
+    exports.Alpha = Alpha;
+    Alpha.Graders = graders_1.Graders;
+  }
+});
+
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/checkpoints/permissions.js
 var require_permissions = __commonJS({
-  "node_modules/openai/resources/fine-tuning/checkpoints/permissions.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/checkpoints/permissions.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.PermissionCreateResponsesPage = exports.Permissions = void 0;
@@ -6191,6 +6462,17 @@ var require_permissions = __commonJS({
        *
        * This enables organization owners to share fine-tuned models with other projects
        * in their organization.
+       *
+       * @example
+       * ```ts
+       * // Automatically fetches more pages as needed.
+       * for await (const permissionCreateResponse of client.fineTuning.checkpoints.permissions.create(
+       *   'ft:gpt-4o-mini-2024-07-18:org:weather:B7R9VjQd',
+       *   { project_ids: ['string'] },
+       * )) {
+       *   // ...
+       * }
+       * ```
        */
       create(fineTunedModelCheckpoint, body, options) {
         return this._client.getAPIList(`/fine_tuning/checkpoints/${fineTunedModelCheckpoint}/permissions`, PermissionCreateResponsesPage, { body, method: "post", ...options });
@@ -6209,6 +6491,15 @@ var require_permissions = __commonJS({
        *
        * Organization owners can use this endpoint to delete a permission for a
        * fine-tuned model checkpoint.
+       *
+       * @example
+       * ```ts
+       * const permission =
+       *   await client.fineTuning.checkpoints.permissions.del(
+       *     'ft:gpt-4o-mini-2024-07-18:org:weather:B7R9VjQd',
+       *     'cp_zc4Q7MP6XxulcVzj4MZdwsAB',
+       *   );
+       * ```
        */
       del(fineTunedModelCheckpoint, permissionId, options) {
         return this._client.delete(`/fine_tuning/checkpoints/${fineTunedModelCheckpoint}/permissions/${permissionId}`, options);
@@ -6222,9 +6513,9 @@ var require_permissions = __commonJS({
   }
 });
 
-// node_modules/openai/resources/fine-tuning/checkpoints/checkpoints.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/checkpoints/checkpoints.js
 var require_checkpoints = __commonJS({
-  "node_modules/openai/resources/fine-tuning/checkpoints/checkpoints.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/checkpoints/checkpoints.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6270,9 +6561,9 @@ var require_checkpoints = __commonJS({
   }
 });
 
-// node_modules/openai/resources/fine-tuning/jobs/checkpoints.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/jobs/checkpoints.js
 var require_checkpoints2 = __commonJS({
-  "node_modules/openai/resources/fine-tuning/jobs/checkpoints.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/jobs/checkpoints.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.FineTuningJobCheckpointsPage = exports.Checkpoints = void 0;
@@ -6295,9 +6586,9 @@ var require_checkpoints2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/fine-tuning/jobs/jobs.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/jobs/jobs.js
 var require_jobs = __commonJS({
-  "node_modules/openai/resources/fine-tuning/jobs/jobs.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/jobs/jobs.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6346,6 +6637,14 @@ var require_jobs = __commonJS({
        * of the fine-tuned models once complete.
        *
        * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/fine-tuning)
+       *
+       * @example
+       * ```ts
+       * const fineTuningJob = await client.fineTuning.jobs.create({
+       *   model: 'gpt-4o-mini',
+       *   training_file: 'file-abc123',
+       * });
+       * ```
        */
       create(body, options) {
         return this._client.post("/fine_tuning/jobs", { body, ...options });
@@ -6354,6 +6653,13 @@ var require_jobs = __commonJS({
        * Get info about a fine-tuning job.
        *
        * [Learn more about fine-tuning](https://platform.openai.com/docs/guides/fine-tuning)
+       *
+       * @example
+       * ```ts
+       * const fineTuningJob = await client.fineTuning.jobs.retrieve(
+       *   'ft-AF1WoRqd3aJAHsqc9NY7iL8F',
+       * );
+       * ```
        */
       retrieve(fineTuningJobId, options) {
         return this._client.get(`/fine_tuning/jobs/${fineTuningJobId}`, options);
@@ -6366,6 +6672,13 @@ var require_jobs = __commonJS({
       }
       /**
        * Immediately cancel a fine-tune job.
+       *
+       * @example
+       * ```ts
+       * const fineTuningJob = await client.fineTuning.jobs.cancel(
+       *   'ft-AF1WoRqd3aJAHsqc9NY7iL8F',
+       * );
+       * ```
        */
       cancel(fineTuningJobId, options) {
         return this._client.post(`/fine_tuning/jobs/${fineTuningJobId}/cancel`, options);
@@ -6378,6 +6691,32 @@ var require_jobs = __commonJS({
           query,
           ...options
         });
+      }
+      /**
+       * Pause a fine-tune job.
+       *
+       * @example
+       * ```ts
+       * const fineTuningJob = await client.fineTuning.jobs.pause(
+       *   'ft-AF1WoRqd3aJAHsqc9NY7iL8F',
+       * );
+       * ```
+       */
+      pause(fineTuningJobId, options) {
+        return this._client.post(`/fine_tuning/jobs/${fineTuningJobId}/pause`, options);
+      }
+      /**
+       * Resume a fine-tune job.
+       *
+       * @example
+       * ```ts
+       * const fineTuningJob = await client.fineTuning.jobs.resume(
+       *   'ft-AF1WoRqd3aJAHsqc9NY7iL8F',
+       * );
+       * ```
+       */
+      resume(fineTuningJobId, options) {
+        return this._client.post(`/fine_tuning/jobs/${fineTuningJobId}/resume`, options);
       }
     };
     exports.Jobs = Jobs;
@@ -6394,9 +6733,9 @@ var require_jobs = __commonJS({
   }
 });
 
-// node_modules/openai/resources/fine-tuning/fine-tuning.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/fine-tuning.js
 var require_fine_tuning = __commonJS({
-  "node_modules/openai/resources/fine-tuning/fine-tuning.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/fine-tuning/fine-tuning.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6428,6 +6767,10 @@ var require_fine_tuning = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.FineTuning = void 0;
     var resource_1 = require_resource();
+    var MethodsAPI = __importStar(require_methods());
+    var methods_1 = require_methods();
+    var AlphaAPI = __importStar(require_alpha());
+    var alpha_1 = require_alpha();
     var CheckpointsAPI = __importStar(require_checkpoints());
     var checkpoints_1 = require_checkpoints();
     var JobsAPI = __importStar(require_jobs());
@@ -6435,21 +6778,85 @@ var require_fine_tuning = __commonJS({
     var FineTuning = class extends resource_1.APIResource {
       constructor() {
         super(...arguments);
+        this.methods = new MethodsAPI.Methods(this._client);
         this.jobs = new JobsAPI.Jobs(this._client);
         this.checkpoints = new CheckpointsAPI.Checkpoints(this._client);
+        this.alpha = new AlphaAPI.Alpha(this._client);
       }
     };
     exports.FineTuning = FineTuning;
+    FineTuning.Methods = methods_1.Methods;
     FineTuning.Jobs = jobs_1.Jobs;
     FineTuning.FineTuningJobsPage = jobs_1.FineTuningJobsPage;
     FineTuning.FineTuningJobEventsPage = jobs_1.FineTuningJobEventsPage;
     FineTuning.Checkpoints = checkpoints_1.Checkpoints;
+    FineTuning.Alpha = alpha_1.Alpha;
   }
 });
 
-// node_modules/openai/resources/images.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/graders/grader-models.js
+var require_grader_models = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/graders/grader-models.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GraderModels = void 0;
+    var resource_1 = require_resource();
+    var GraderModels = class extends resource_1.APIResource {
+    };
+    exports.GraderModels = GraderModels;
+  }
+});
+
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/graders/graders.js
+var require_graders2 = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/graders/graders.js"(exports) {
+    "use strict";
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.Graders = void 0;
+    var resource_1 = require_resource();
+    var GraderModelsAPI = __importStar(require_grader_models());
+    var grader_models_1 = require_grader_models();
+    var Graders = class extends resource_1.APIResource {
+      constructor() {
+        super(...arguments);
+        this.graderModels = new GraderModelsAPI.GraderModels(this._client);
+      }
+    };
+    exports.Graders = Graders;
+    Graders.GraderModels = grader_models_1.GraderModels;
+  }
+});
+
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/images.js
 var require_images = __commonJS({
-  "node_modules/openai/resources/images.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/images.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -6485,6 +6892,13 @@ var require_images = __commonJS({
     var Images = class extends resource_1.APIResource {
       /**
        * Creates a variation of a given image. This endpoint only supports `dall-e-2`.
+       *
+       * @example
+       * ```ts
+       * const imagesResponse = await client.images.createVariation({
+       *   image: fs.createReadStream('otter.png'),
+       * });
+       * ```
        */
       createVariation(body, options) {
         return this._client.post("/images/variations", Core.multipartFormRequestOptions({ body, ...options }));
@@ -6492,6 +6906,14 @@ var require_images = __commonJS({
       /**
        * Creates an edited or extended image given one or more source images and a
        * prompt. This endpoint only supports `gpt-image-1` and `dall-e-2`.
+       *
+       * @example
+       * ```ts
+       * const imagesResponse = await client.images.edit({
+       *   image: fs.createReadStream('path/to/file'),
+       *   prompt: 'A cute baby sea otter wearing a beret',
+       * });
+       * ```
        */
       edit(body, options) {
         return this._client.post("/images/edits", Core.multipartFormRequestOptions({ body, ...options }));
@@ -6499,6 +6921,13 @@ var require_images = __commonJS({
       /**
        * Creates an image given a prompt.
        * [Learn more](https://platform.openai.com/docs/guides/images).
+       *
+       * @example
+       * ```ts
+       * const imagesResponse = await client.images.generate({
+       *   prompt: 'A cute baby sea otter',
+       * });
+       * ```
        */
       generate(body, options) {
         return this._client.post("/images/generations", { body, ...options });
@@ -6508,9 +6937,9 @@ var require_images = __commonJS({
   }
 });
 
-// node_modules/openai/resources/models.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/models.js
 var require_models = __commonJS({
-  "node_modules/openai/resources/models.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/models.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ModelsPage = exports.Models = void 0;
@@ -6547,9 +6976,9 @@ var require_models = __commonJS({
   }
 });
 
-// node_modules/openai/resources/moderations.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/moderations.js
 var require_moderations = __commonJS({
-  "node_modules/openai/resources/moderations.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/moderations.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Moderations = void 0;
@@ -6567,9 +6996,9 @@ var require_moderations = __commonJS({
   }
 });
 
-// node_modules/openai/lib/ResponsesParser.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ResponsesParser.js
 var require_ResponsesParser = __commonJS({
-  "node_modules/openai/lib/ResponsesParser.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/ResponsesParser.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.addOutputText = exports.validateInputTools = exports.shouldParseToolCall = exports.isAutoParsableTool = exports.makeParseableResponseTool = exports.hasAutoParseableInput = exports.parseResponse = exports.maybeParseResponse = void 0;
@@ -6740,9 +7169,9 @@ var require_ResponsesParser = __commonJS({
   }
 });
 
-// node_modules/openai/resources/responses/input-items.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/responses/input-items.js
 var require_input_items = __commonJS({
-  "node_modules/openai/resources/responses/input-items.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/responses/input-items.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.ResponseItemsPage = exports.InputItems = void 0;
@@ -6767,9 +7196,9 @@ var require_input_items = __commonJS({
   }
 });
 
-// node_modules/openai/lib/responses/ResponseStream.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/responses/ResponseStream.js
 var require_ResponseStream = __commonJS({
-  "node_modules/openai/lib/responses/ResponseStream.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/responses/ResponseStream.js"(exports) {
     "use strict";
     var __classPrivateFieldSet = exports && exports.__classPrivateFieldSet || function(receiver, state, value, kind, f) {
       if (kind === "m") throw new TypeError("Private method is not writable");
@@ -7015,9 +7444,9 @@ var require_ResponseStream = __commonJS({
   }
 });
 
-// node_modules/openai/resources/responses/responses.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/responses/responses.js
 var require_responses = __commonJS({
-  "node_modules/openai/resources/responses/responses.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/responses/responses.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -7076,6 +7505,13 @@ var require_responses = __commonJS({
       }
       /**
        * Deletes a model response with the given ID.
+       *
+       * @example
+       * ```ts
+       * await client.responses.del(
+       *   'resp_677efb5139a88190b512bc3fef8e535d',
+       * );
+       * ```
        */
       del(responseId, options) {
         return this._client.delete(`/responses/${responseId}`, {
@@ -7101,9 +7537,9 @@ var require_responses = __commonJS({
   }
 });
 
-// node_modules/openai/resources/uploads/parts.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/uploads/parts.js
 var require_parts = __commonJS({
-  "node_modules/openai/resources/uploads/parts.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/uploads/parts.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -7158,9 +7594,9 @@ var require_parts = __commonJS({
   }
 });
 
-// node_modules/openai/resources/uploads/uploads.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/uploads/uploads.js
 var require_uploads2 = __commonJS({
-  "node_modules/openai/resources/uploads/uploads.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/uploads/uploads.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -7253,9 +7689,9 @@ var require_uploads2 = __commonJS({
   }
 });
 
-// node_modules/openai/lib/Util.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/Util.js
 var require_Util = __commonJS({
-  "node_modules/openai/lib/Util.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/lib/Util.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.allSettledWithThrow = void 0;
@@ -7280,9 +7716,9 @@ var require_Util = __commonJS({
   }
 });
 
-// node_modules/openai/resources/vector-stores/files.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/files.js
 var require_files2 = __commonJS({
-  "node_modules/openai/resources/vector-stores/files.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/files.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.FileContentResponsesPage = exports.VectorStoreFilesPage = exports.Files = void 0;
@@ -7425,9 +7861,9 @@ var require_files2 = __commonJS({
   }
 });
 
-// node_modules/openai/resources/vector-stores/file-batches.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/file-batches.js
 var require_file_batches = __commonJS({
-  "node_modules/openai/resources/vector-stores/file-batches.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/file-batches.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.VectorStoreFilesPage = exports.FileBatches = void 0;
@@ -7552,9 +7988,9 @@ var require_file_batches = __commonJS({
   }
 });
 
-// node_modules/openai/resources/vector-stores/vector-stores.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/vector-stores.js
 var require_vector_stores = __commonJS({
-  "node_modules/openai/resources/vector-stores/vector-stores.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/vector-stores/vector-stores.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -7675,9 +8111,9 @@ var require_vector_stores = __commonJS({
   }
 });
 
-// node_modules/openai/resources/index.js
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/index.js
 var require_resources = __commonJS({
-  "node_modules/openai/resources/index.js"(exports) {
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/resources/index.js"(exports) {
     "use strict";
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
@@ -7696,7 +8132,7 @@ var require_resources = __commonJS({
       for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.VectorStores = exports.VectorStoreSearchResponsesPage = exports.VectorStoresPage = exports.Uploads = exports.Responses = exports.Moderations = exports.Models = exports.ModelsPage = exports.Images = exports.FineTuning = exports.Files = exports.FileObjectsPage = exports.Evals = exports.EvalListResponsesPage = exports.Embeddings = exports.Completions = exports.Beta = exports.Batches = exports.BatchesPage = exports.Audio = void 0;
+    exports.VectorStores = exports.VectorStoreSearchResponsesPage = exports.VectorStoresPage = exports.Uploads = exports.Responses = exports.Moderations = exports.Models = exports.ModelsPage = exports.Images = exports.Graders = exports.FineTuning = exports.Files = exports.FileObjectsPage = exports.Evals = exports.EvalListResponsesPage = exports.Embeddings = exports.Completions = exports.Beta = exports.Batches = exports.BatchesPage = exports.Audio = void 0;
     __exportStar(require_chat2(), exports);
     __exportStar(require_shared(), exports);
     var audio_1 = require_audio();
@@ -7740,6 +8176,10 @@ var require_resources = __commonJS({
     Object.defineProperty(exports, "FineTuning", { enumerable: true, get: function() {
       return fine_tuning_1.FineTuning;
     } });
+    var graders_1 = require_graders2();
+    Object.defineProperty(exports, "Graders", { enumerable: true, get: function() {
+      return graders_1.Graders;
+    } });
     var images_1 = require_images();
     Object.defineProperty(exports, "Images", { enumerable: true, get: function() {
       return images_1.Images;
@@ -7776,9 +8216,9 @@ var require_resources = __commonJS({
   }
 });
 
-// node_modules/openai/index.js
-var require_index = __commonJS({
-  "node_modules/openai/index.js"(exports, module) {
+// node_modules/.pnpm/openai@4.98.0/node_modules/openai/index.js
+var require_openai = __commonJS({
+  "node_modules/.pnpm/openai@4.98.0/node_modules/openai/index.js"(exports, module) {
     var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -7827,6 +8267,7 @@ var require_index = __commonJS({
     var chat_1 = require_chat();
     var evals_1 = require_evals();
     var fine_tuning_1 = require_fine_tuning();
+    var graders_1 = require_graders2();
     var responses_1 = require_responses();
     var uploads_1 = require_uploads2();
     var vector_stores_1 = require_vector_stores();
@@ -7877,6 +8318,7 @@ var require_index = __commonJS({
         this.moderations = new API.Moderations(this);
         this.models = new API.Models(this);
         this.fineTuning = new API.FineTuning(this);
+        this.graders = new API.Graders(this);
         this.vectorStores = new API.VectorStores(this);
         this.beta = new API.Beta(this);
         this.batches = new API.Batches(this);
@@ -7937,6 +8379,7 @@ var require_index = __commonJS({
     OpenAI.Models = models_1.Models;
     OpenAI.ModelsPage = models_1.ModelsPage;
     OpenAI.FineTuning = fine_tuning_1.FineTuning;
+    OpenAI.Graders = graders_1.Graders;
     OpenAI.VectorStores = vector_stores_1.VectorStores;
     OpenAI.VectorStoresPage = vector_stores_1.VectorStoresPage;
     OpenAI.VectorStoreSearchResponsesPage = vector_stores_1.VectorStoreSearchResponsesPage;
@@ -8108,4 +8551,4 @@ var require_index = __commonJS({
     exports.default = OpenAI;
   }
 });
-export default require_index();
+export default require_openai();

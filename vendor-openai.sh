@@ -1,10 +1,8 @@
-# bun (a/o 1.2.13 canary) has issues importing openai in the browser due to
-# circular imports in the package. until that's fixed, we vendor it as a .js
-# file in the repo.
-# this script takes the currently installed openai package, and vendors it
+# Node.js version of the original vendoring script
+# This script takes the currently installed openai package, and vendors it as a .js file
 
 echo "(vendor-openai.sh) vendoring openai to vendored/openai.js..."
-bunx esbuild node_modules/openai/index.js \
+npx esbuild node_modules/openai/index.js \
   --log-level=warning \
   --bundle \
   --format=esm \

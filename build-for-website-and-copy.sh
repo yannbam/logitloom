@@ -5,7 +5,8 @@ FIND='</body>'
 REPLACE='    <script data-goatcounter="https://stats.vgel.me/count" async src="//stats.vgel.me/count.js"></script>
 </body>'
 
-bun build --outdir=dist index.html
+# Use Vite for building
+npm run build
 
 mv dist/index.html dist/index.original.html
 rg \
