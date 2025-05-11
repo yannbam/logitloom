@@ -53,9 +53,7 @@ function App(): JSX.Element {
     <>
       <div className="sticky-footer">
         <div className="spinner" hidden={!store.running}></div>{" "}
-        <div className="error">
-          {store.value.kind === "error" && store.value.error.toString()}
-        </div>
+        {store.value.kind === "error" && !store.running && <div className="error">{store.value.error.toString()}</div>}
       </div>
       <Settings>
         <TextSetting label="Base URL" type="text" value={baseUrl} onChange={setBaseUrl} />{" "}
