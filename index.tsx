@@ -146,7 +146,7 @@ function App(): JSX.Element {
         </button>
       </Settings>
       <hr />
-      <div>
+      <div id="tree-container">
         <Tree
           roots={store.value.roots ?? []}
           foldedNodeIds={foldedNodeIds}

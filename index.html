@@ -88,11 +88,15 @@
                 }
             }
 
+
+        #tree-container {
+            overflow-x: auto;
         }
 
         li.tree-node {
             position: relative;
             margin-top: 10px;
+            width: max-content;
 
             &:hover {
                 color: rgb(39, 128, 22);
@@ -128,6 +132,8 @@
             }
 
             div.tree-node-info {
+                margin-right: 10rem;
+
                 span.token {
                     font-family: monospace;
                     background-color: rgb(231, 231, 231);
