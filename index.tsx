@@ -37,6 +37,7 @@ function App(): JSX.Element {
     defaultValue: apiPresets?.[0]?.id ?? "",
   });
 
+  const [systemPrompt, setSystemPrompt] = useLocalStorageState<string>("lastSystemPrompt");
   const [prompt, setPrompt] = useLocalStorageState<string>("lastPrompt");
   const [prefill, setPrefill] = useLocalStorageState<string>("lastPrefill");
 
@@ -92,6 +93,7 @@ function App(): JSX.Element {
       </Settings>
       <hr />
       <Settings>
+        {modelType === "chat" && <PromptSetting label="System" value={systemPrompt} onChange={setSystemPrompt} />}{" "}
         <PromptSetting label="Prompt" value={prompt} onChange={setPrompt} />{" "}
         <PromptSetting label="Prefill" value={prefill} onChange={setPrefill} />
       </Settings>
@@ -135,6 +137,7 @@ function App(): JSX.Element {
               apiKey,
               modelName,
               modelType,
+              systemPrompt,
               prompt,
               prefill,
               depth,
@@ -156,7 +159,7 @@ function App(): JSX.Element {
             modelType === "chat"
               ? {
                   kind: modelType,
-                  systemPrompt: undefined, // TODO
+                  systemPrompt,
                   prompt,
                   prefill,
                 }
@@ -172,7 +175,7 @@ function App(): JSX.Element {
             // setModelName(modelName);
             // setModelType(modelSettings.kind);
             if (modelSettings.kind === "chat") {
-              // setSystemPrompt(modelSettings.systemPrompt); // TODO
+              setSystemPrompt(modelSettings.systemPrompt);
             }
             setPrompt(modelSettings.prompt);
             setPrefill(modelSettings.prefill);
@@ -201,6 +204,7 @@ function App(): JSX.Element {
               apiKey,
               modelName,
               modelType,
+              systemPrompt,
               prompt,
               prefill,
               depth,

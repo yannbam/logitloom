@@ -27,6 +27,7 @@ export interface TreeOptions {
   apiInfo: ApiInfo;
   model: string;
   modelType: "chat" | "base";
+  systemPrompt?: string;
   prompt?: string;
   prefill?: string;
   depth: number;
@@ -138,7 +139,11 @@ async function query(tokens: Token[], opts: TreeOptions): Promise<QueriedLogprob
 
   let response: Completion | ChatCompletion;
   if (opts.modelType === "chat") {
-    const messages: ChatCompletionMessageParam[] = [{ role: "user", content: opts.prompt ?? "" }];
+    const messages: ChatCompletionMessageParam[] = [];
+    if (opts.systemPrompt) {
+      messages.push({ role: "system", content: opts.systemPrompt });
+    }
+    messages.push({ role: "user", content: opts.prompt ?? "" });
     if (prefill) {
       messages.push({
         role: "assistant",

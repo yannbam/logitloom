@@ -122,6 +122,7 @@ export function run(opts: {
   apiKey: string;
   modelName: string;
   modelType: "chat" | "base";
+  systemPrompt: string | undefined;
   prompt: string | undefined;
   prefill: string | undefined;
   depth: number;
@@ -174,6 +175,7 @@ export function run(opts: {
         apiInfo,
         model: opts.modelName,
         modelType: opts.modelType,
+        systemPrompt: opts.systemPrompt,
         prompt: opts.prompt,
         prefill: opts.prefill,
         depth: opts.depth,
@@ -195,6 +197,7 @@ export function run(opts: {
           apiInfo,
           model: opts.modelName,
           modelType: opts.modelType,
+          systemPrompt: opts.systemPrompt,
           prompt: opts.prompt,
           prefill: opts.prefill,
           depth: opts.depth,
