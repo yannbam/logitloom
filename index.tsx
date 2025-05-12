@@ -761,15 +761,7 @@ function ClearButton(props: { disabled: boolean }): JSX.Element {
 /**
  * Try to fix broken emoji sequences, e.g. { text: "\\x20\\xf0\\x9f\\x8c", ... },
  * which may be spread over multiple tokens.
- *
- * TODO right now this only handles simple situations like \\x20\\xf0\\x9f -> \\x8c in two tokens
- * Other things I've seen:
- *
- * - \\x11 -> \\x22\\x33 -> \\x44 over three or more tokens
- * - \\x11\\x22 -> \\x -> 33 where the byte escaoe is split between two tokens(!)
- *
- * Need to handle these still.
- * **/
+ **/
 function tryRecoverBrokenEmoji(tokens: Token[]): string | null {
   if (!tokens.length || !looksLikeEscapedUtf8(tokens.at(-1)!.text, false)) {
     return null;

@@ -62,7 +62,6 @@ export function loadTree(opts: {
 
     reader.addEventListener("load", () => {
       try {
-        // TODO: actually validate this
         const data = JSON.parse(reader.result as string);
         if ((data as SerializedTree).isLogitLoomTreeVersion === "logit-loom-tree-v1") {
           opts.onDone(data as SerializedTree);

@@ -226,6 +226,7 @@ export function run(opts: {
     });
 }
 
+// TODO: this was added before save-load.ts, but it would be nice to unify the mechanisms
 const treeLocalStorageKey = "prevTree";
 
 /** Get the previous tree from localStorage, or an empty tree on error / missing tree. */
