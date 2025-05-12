@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, type JSX } from "react";
+import React, { useEffect, useRef, useState, type JSX } from "react";
 import ReactDOM from "react-dom/client";
 import useLocalStorageState from "use-local-storage-state";
 import * as uuid from "uuid";
 
 import { type Token } from "./logit-loom";
-import { useTreeStore, run, interruptRun, getTokenAndPrefix, loadTreeFromLocalStorage } from "./tree-store";
+import * as TreeStore from "./tree-store";
 import type { ApiInfo } from "./api-sniffer";
 
 const possibleModelTypes = ["chat", "base"] as const;
@@ -43,11 +43,11 @@ function App(): JSX.Element {
   const [depth, setDepth] = useLocalStorageState<number>("depth", { defaultValue: 5 });
   const [width, setWidth] = useLocalStorageState<number>("maxWidth", { defaultValue: 3 });
   const [coverProb, setCoverProb] = useLocalStorageState<number>("coverProb", { defaultValue: 0.8 });
-  const store = useTreeStore();
-  const [foldedNodeIds, setFoldedNodeIds] = useLocalStorageState<string[]>("foldedNodes", { defaultValue: [] });
 
+  const store = TreeStore.useTreeStore();
+  const [foldedNodeIds, setFoldedNodeIds] = useLocalStorageState<string[]>("foldedNodes", { defaultValue: [] });
   useEffect(() => {
-    loadTreeFromLocalStorage();
+    TreeStore.loadTreeFromLocalStorage();
   }, []);
 
   return (
@@ -130,7 +130,7 @@ function App(): JSX.Element {
             if (!baseUrl || !apiKey || !modelName || store.running) {
               return;
             }
-            run({
+            TreeStore.run({
               baseUrl,
               apiKey,
               modelName,
@@ -145,9 +145,39 @@ function App(): JSX.Element {
         >
           Run
         </button>{" "}
-        <button hidden={!store.running} disabled={store.interrupting} onClick={interruptRun}>
+        <button hidden={!store.running} disabled={store.interrupting} onClick={TreeStore.interruptRun}>
           {store.interrupting ? "Stopping..." : "Stop"}
         </button>
+        <SettingsSpacer />
+        <TreeSaveLoadClearButtons
+          treeIsRunning={store.running}
+          modelName={modelName ?? ""}
+          modelSettings={
+            modelType === "chat"
+              ? {
+                  kind: modelType,
+                  systemPrompt: undefined, // TODO
+                  prompt,
+                  prefill,
+                }
+              : {
+                  kind: modelType,
+                  prompt,
+                  prefill,
+                }
+          }
+          importSettings={(modelName, modelSettings) => {
+            // TODO: this isn't a great idea right now bc we don't want to serialize the apiKey / baseUrl, which might be private
+            // maybe we should instead pop something up saying that the tree was generated with a different model than currently selected
+            // setModelName(modelName);
+            // setModelType(modelSettings.kind);
+            if (modelSettings.kind === "chat") {
+              // setSystemPrompt(modelSettings.systemPrompt); // TODO
+            }
+            setPrompt(modelSettings.prompt);
+            setPrefill(modelSettings.prefill);
+          }}
+        />
       </Settings>
       <hr />
       <div id="tree-container">
@@ -156,7 +186,7 @@ function App(): JSX.Element {
           foldedNodeIds={foldedNodeIds}
           setFoldedNodeIds={setFoldedNodeIds}
           onClickAddPrefill={(id) => {
-            const newPrefill = getTokenAndPrefix(store, id);
+            const newPrefill = TreeStore.getTokenAndPrefix(store, id);
             if (newPrefill !== null) {
               setPrefill((prefill ?? "") + newPrefill);
             }
@@ -166,7 +196,7 @@ function App(): JSX.Element {
             if (!baseUrl || !apiKey || !modelName || store.running) {
               return;
             }
-            run({
+            TreeStore.run({
               baseUrl,
               apiKey,
               modelName,
@@ -317,6 +347,10 @@ const TreeNode = React.memo(function TreeNode({
 
 function Settings(props: { children?: React.ReactNode | undefined }): JSX.Element {
   return <div className="settings-container">{props.children}</div>;
+}
+
+function SettingsSpacer(): JSX.Element {
+  return <div className="settings-spacer"></div>;
 }
 
 function TextSetting(props: {
@@ -597,6 +631,8 @@ function EditPresetsDialogRow(props: {
   );
 }
 
+// Api warning text (detected provider etc)
+
 function ShowAPIWarning({
   apiInfo,
   modelName,
@@ -643,6 +679,80 @@ function ShowAPIWarning({
         {warnings.length === 1 ? warnings[0] + "." : warnings.join(". ")}
       </small>
     </div>
+  );
+}
+
+// Export / Load / Clear Tree buttons
+
+function TreeSaveLoadClearButtons(props: {
+  treeIsRunning: boolean;
+  modelName: string;
+  modelSettings: TreeStore.SerializedModelSettings;
+  importSettings: (modelName: string, modelSettings: TreeStore.SerializedModelSettings) => void;
+}): JSX.Element {
+  return (
+    <div id="tree-save-load-clear-buttons">
+      <span>Tree:</span>
+      <SaveButton disabled={props.treeIsRunning} modelName={props.modelName} modelSettings={props.modelSettings} />
+      <LoadButton disabled={props.treeIsRunning} importSettings={props.importSettings} />
+      <ClearButton disabled={props.treeIsRunning} />
+    </div>
+  );
+}
+
+function SaveButton(props: {
+  disabled: boolean;
+  modelName: string;
+  modelSettings: TreeStore.SerializedModelSettings;
+}): JSX.Element {
+  return (
+    <button
+      disabled={props.disabled}
+      onClick={() => {
+        TreeStore.saveTree(props.modelName, props.modelSettings);
+      }}
+    >
+      Save
+    </button>
+  );
+}
+
+function LoadButton(props: {
+  disabled: boolean;
+  importSettings: (modelName: string, modelSettings: TreeStore.SerializedModelSettings) => void;
+}): JSX.Element {
+  return (
+    <button
+      disabled={props.disabled}
+      onClick={() => {
+        TreeStore.loadTree(props.importSettings);
+      }}
+    >
+      Load
+    </button>
+  );
+}
+
+function ClearButton(props: { disabled: boolean }): JSX.Element {
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <button
+      disabled={props.disabled}
+      onClick={() => {
+        // this component will never unmount, so no timeout leaks
+        if (confirming) {
+          TreeStore.setTree([]);
+          setConfirming(false);
+        } else {
+          setConfirming(true);
+          setTimeout(() => {
+            setConfirming(false);
+          }, 5000);
+        }
+      }}
+    >
+      {confirming ? "Are you sure?" : "Clear"}
+    </button>
   );
 }
 

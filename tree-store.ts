@@ -3,6 +3,7 @@ import OpenAI from "./openai";
 
 import { buildTree, expandTree, pathToNodeWithId, type Token } from "./logit-loom";
 import { type ApiInfo, sniffApi } from "./api-sniffer";
+import * as SaveLoad from "./save-load";
 
 export function useTreeStore(): State {
   return useSyncExternalStore(subscribe, getSnapshot);
@@ -61,6 +62,51 @@ export function getTokenAndPrefix(state: State, id: string): string | null {
 export function loadTreeFromLocalStorage() {
   state = { ...state, value: { kind: "tree", roots: tryGetTreeFromLocalStorage() } };
   emitChange();
+}
+
+export function setTree(roots: Token[]) {
+  if (state.running) {
+    return;
+  }
+  state = { ...state, value: { kind: "tree", roots } };
+  emitChange();
+}
+
+export type SerializedModelSettings = SaveLoad.SerializedTree["modelSettings"];
+
+export function saveTree(modelName: string, modelSettings: SerializedModelSettings) {
+  const roots = state.value.roots;
+  if (state.running || roots == null) {
+    return;
+  }
+
+  SaveLoad.saveTree({
+    isLogitLoomTreeVersion: "logit-loom-tree-v1",
+    modelName,
+    modelSettings,
+    roots,
+  });
+}
+
+export function loadTree(
+  importSettings: (modelName: string, modelSettings: SerializedModelSettings) => void
+) {
+  if (state.running) {
+    return;
+  }
+
+  SaveLoad.loadTree({
+    onDone: (tree) => {
+      state = { ...state, value: { kind: "tree", roots: tree.roots } };
+      emitChange();
+      importSettings(tree.modelName, tree.modelSettings);
+    },
+    onError: (error) => {
+      state = { ...state, value: { kind: "error", error, roots: state.value.roots } };
+      emitChange();
+    },
+    onCancel: () => {},
+  });
 }
 
 export function interruptRun() {
