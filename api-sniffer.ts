@@ -1,5 +1,5 @@
 export interface ApiInfo {
-  provider: "openai" | "anthropic" | "deepseek" | "openrouter" | "hyperbolic" | "vllm" | "kobold-cpp" | "unknown";
+  provider: "openai" | "anthropic" | "deepseek" | "openrouter" | "hyperbolic" | "vllm" | "kobold-cpp" | "chutes" | "unknown";
   supportsLogprobs: "yes" | "no" | "unknown";
   supportsPrefill: "yes" | "no" | "unknown";
   prefillStyle?: { kind: "trailing" } | { kind: "flags"; flags: Record<string, any>; target: "body" | "message" };
@@ -87,7 +87,14 @@ async function _sniffApi(baseUrl: string, apiKey: string): Promise<ApiInfo> {
 
     const models = (json.data ?? []).map((m: any) => m.id);
     const owners = (json.data ?? []).map((m: any) => m.owned_by);
-    if (owners.includes("koboldcpp")) {
+    if (models.some((m: string) => m.startsWith("chutesai/"))) {
+      return {
+        provider: "chutes",
+        supportsLogprobs: "unknown", // yes for some models, not for others?
+        supportsPrefill: "unknown",  // same
+        prefillStyle: { kind: "trailing" },
+      };
+    } else if (owners.includes("koboldcpp")) {
       return {
         provider: "kobold-cpp",
         supportsLogprobs: "yes",
