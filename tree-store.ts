@@ -5,11 +5,6 @@ import { buildTree, expandTree, pathToNodeWithId, type Token } from "./logit-loo
 import { type ApiInfo, sniffApi } from "./api-sniffer";
 import * as SaveLoad from "./save-load";
 
-export function useTreeStore(): State {
-  return useSyncExternalStore(subscribe, getSnapshot);
-}
-
-let listeners: Array<() => void> = [];
 export interface State {
   running: boolean;
   interrupting: boolean;
@@ -23,29 +18,54 @@ export interface State {
       };
   baseUrlApiInfoCache: Record<string, ApiInfo>;
 }
-let state: State = {
-  running: false,
-  interrupting: false,
-  value: { kind: "tree", roots: [] },
-  baseUrlApiInfoCache: {},
-};
 
-function subscribe(listener: () => void): () => void {
-  listeners = [...listeners, listener];
-  return () => {
-    listeners = listeners.filter((l) => l !== listener);
+const { useTreeStore: _useTreeStore, updateState } = (() => {
+  let listeners: Array<() => void> = [];
+  let _state: State = {
+    running: false,
+    interrupting: false,
+    value: { kind: "tree", roots: [] },
+    baseUrlApiInfoCache: {},
   };
-}
 
-function emitChange() {
-  for (let listener of listeners) {
-    listener();
+  function subscribe(listener: () => void): () => void {
+    listeners = [...listeners, listener];
+    return () => {
+      listeners = listeners.filter((l) => l !== listener);
+    };
   }
-}
 
-function getSnapshot(): State {
-  return state;
-}
+  function emitChange() {
+    for (let listener of listeners) {
+      listener();
+    }
+  }
+
+  function getSnapshot(): State {
+    return _state;
+  }
+
+  return {
+    useTreeStore: (): State => {
+      return useSyncExternalStore(subscribe, getSnapshot);
+    },
+    updateState: (update: (oldState: State) => State): void => {
+      const newState = update(_state);
+      if (newState !== _state) {
+        _state = newState;
+        emitChange();
+      }
+    },
+  };
+})();
+
+export const useTreeStore = _useTreeStore;
+
+// Helper functions
+// These functions should always take a state, instead of fetching state from the module. (This is why the current state is private.)
+// The reason for this is if a component just uses one of these functions, it needs to have the state passed into it somehow (either via useTreeStore or as a prop)
+// so that react knows to rerender it when the state changes. If the helper function pulls `state` directly, then react doesn't know about the dependency on state.
+// Using `updateState` is fine, however.
 
 /** Return the token string for a given token -- all the tokens before it, and itself, joined together. */
 export function getTokenAndPrefix(state: State, id: string): string | null {
@@ -60,21 +80,21 @@ export function getTokenAndPrefix(state: State, id: string): string | null {
 }
 
 export function loadTreeFromLocalStorage() {
-  state = { ...state, value: { kind: "tree", roots: tryGetTreeFromLocalStorage() } };
-  emitChange();
+  updateState((state) => ({ ...state, value: { kind: "tree", roots: tryGetTreeFromLocalStorage() } }));
 }
 
 export function setTree(roots: Token[]) {
-  if (state.running) {
-    return;
-  }
-  state = { ...state, value: { kind: "tree", roots } };
-  emitChange();
+  updateState((state) => {
+    if (state.running) {
+      return state;
+    }
+    return { ...state, value: { kind: "tree", roots } };
+  });
 }
 
 export type SerializedModelSettings = SaveLoad.SerializedTree["modelSettings"];
 
-export function saveTree(modelName: string, modelSettings: SerializedModelSettings) {
+export function saveTree(state: State, modelName: string, modelSettings: SerializedModelSettings) {
   const roots = state.value.roots;
   if (state.running || roots == null) {
     return;
@@ -88,49 +108,55 @@ export function saveTree(modelName: string, modelSettings: SerializedModelSettin
   });
 }
 
-export function loadTree(
-  importSettings: (modelName: string, modelSettings: SerializedModelSettings) => void
-) {
-  if (state.running) {
-    return;
-  }
-
+export function loadTree(importSettings: (modelName: string, modelSettings: SerializedModelSettings) => void) {
   SaveLoad.loadTree({
     onDone: (tree) => {
-      state = { ...state, value: { kind: "tree", roots: tree.roots } };
-      emitChange();
-      importSettings(tree.modelName, tree.modelSettings);
+      updateState((state) => {
+        if (state.running) {
+          return state;
+        }
+        importSettings(tree.modelName, tree.modelSettings);
+        return { ...state, value: { kind: "tree", roots: tree.roots } };
+      });
     },
     onError: (error) => {
-      state = { ...state, value: { kind: "error", error, roots: state.value.roots } };
-      emitChange();
+      updateState((state) => {
+        if (state.running) {
+          return state;
+        }
+        return { ...state, value: { kind: "error", error, roots: state.value.roots } };
+      });
     },
     onCancel: () => {},
   });
 }
 
 export function interruptRun() {
-  if (!state.running || state.interrupting) {
-    return;
-  }
-  state = { ...state, interrupting: true };
-  emitChange();
+  updateState((state) => {
+    if (!state.running || state.interrupting) {
+      return state;
+    }
+    return { ...state, interrupting: true };
+  });
 }
 
-export function run(opts: {
-  baseUrl: string;
-  apiKey: string;
-  modelName: string;
-  modelType: "chat" | "base";
-  systemPrompt: string | undefined;
-  prompt: string | undefined;
-  prefill: string | undefined;
-  depth: number;
-  maxWidth: number;
-  coverProb: number;
-  fromNodeId?: string;
-}) {
-  if (state.running) {
+export function run(
+  prevState: State,
+  opts: {
+    baseUrl: string;
+    apiKey: string;
+    modelName: string;
+    modelType: "chat" | "base";
+    systemPrompt: string | undefined;
+    prompt: string | undefined;
+    prefill: string | undefined;
+    depth: number;
+    maxWidth: number;
+    coverProb: number;
+    fromNodeId?: string;
+  }
+) {
+  if (prevState.running) {
     return;
   }
 
@@ -140,29 +166,34 @@ export function run(opts: {
     dangerouslyAllowBrowser: true,
   });
 
-  state = { ...state, running: true };
-  emitChange();
+  updateState((state) => ({ ...state, running: true }));
 
   async function getApiInfo(): Promise<ApiInfo> {
     if (!isProbablyLocalhost(opts.baseUrl)) {
       // don't *use* cache for localhost because it's liable to change if the user runs a new server
       // but we still store it for the UI to render warnings
-      const cachedApiInfo = state.baseUrlApiInfoCache[opts.baseUrl];
+      const cachedApiInfo = prevState.baseUrlApiInfoCache[opts.baseUrl];
       if (cachedApiInfo != null) {
         return cachedApiInfo;
       }
     }
     const apiInfo = await sniffApi(opts.baseUrl, opts.apiKey);
-    state = { ...state, baseUrlApiInfoCache: { ...state.baseUrlApiInfoCache, [opts.baseUrl]: apiInfo } };
-    emitChange();
+    updateState((state) => ({
+      ...state,
+      baseUrlApiInfoCache: { ...state.baseUrlApiInfoCache, [opts.baseUrl]: apiInfo },
+    }));
     return apiInfo;
   }
 
   function progress(roots: Token[]) {
-    state = { ...state, value: { kind: "tree", roots } };
     trySyncTreeToLocalStorage(roots);
-    emitChange();
-    return state.interrupting; // interrupt if user requested it
+    // TODO: this is kinda gross, not supposed to smuggle values out of state like this, but it's OK because this isn't visible to react
+    let interrupting = false;
+    updateState((state) => {
+      interrupting = state.interrupting;
+      return { ...state, value: { kind: "tree", roots } };
+    });
+    return interrupting; // interrupt if user requested it
   }
 
   let promise: Promise<Token[]>;
@@ -185,7 +216,7 @@ export function run(opts: {
       })
     );
   } else {
-    const roots = state.value.roots;
+    const roots = prevState.value.roots;
     if (roots == null) {
       throw new Error(`ui bug: state missing tree, can't expand '${opts.fromNodeId}' (how did you get this id?)`);
     }
@@ -213,19 +244,17 @@ export function run(opts: {
 
   promise
     .then((roots) => {
-      state = { ...state, value: { kind: "tree", roots }, running: false, interrupting: false };
       trySyncTreeToLocalStorage(roots);
-      emitChange();
+      updateState((state) => ({ ...state, value: { kind: "tree", roots }, running: false, interrupting: false }));
     })
     .catch((error) => {
-      state = {
+      console.error(error);
+      updateState((state) => ({
         ...state,
         running: false,
         interrupting: false,
         value: { kind: "error", error, roots: state.value.roots },
-      };
-      emitChange();
-      console.error(error);
+      }));
     });
 }
 
@@ -267,6 +296,6 @@ function isProbablyLocalhost(url: string): boolean {
     url.includes("//localhost") ||
     url.includes("//127.0.0") ||
     url.includes("//[::1]") ||
-    url.includes("//[0:0:0:0:0:0:0:1")
+    url.includes("//[0:0:0:0:0:0:0:1]")
   );
 }

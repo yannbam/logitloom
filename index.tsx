@@ -132,7 +132,7 @@ function App(): JSX.Element {
             if (!baseUrl || !apiKey || !modelName || store.running) {
               return;
             }
-            TreeStore.run({
+            TreeStore.run(store, {
               baseUrl,
               apiKey,
               modelName,
@@ -153,7 +153,7 @@ function App(): JSX.Element {
         </button>
         <SettingsSpacer />
         <TreeSaveLoadClearButtons
-          treeIsRunning={store.running}
+          store={store}
           modelName={modelName ?? ""}
           modelSettings={
             modelType === "chat"
@@ -199,7 +199,7 @@ function App(): JSX.Element {
             if (!baseUrl || !apiKey || !modelName || store.running) {
               return;
             }
-            TreeStore.run({
+            TreeStore.run(store, {
               baseUrl,
               apiKey,
               modelName,
@@ -689,7 +689,7 @@ function ShowAPIWarning({
 // Export / Load / Clear Tree buttons
 
 function TreeSaveLoadClearButtons(props: {
-  treeIsRunning: boolean;
+  store: TreeStore.State;
   modelName: string;
   modelSettings: TreeStore.SerializedModelSettings;
   importSettings: (modelName: string, modelSettings: TreeStore.SerializedModelSettings) => void;
@@ -697,14 +697,20 @@ function TreeSaveLoadClearButtons(props: {
   return (
     <div id="tree-save-load-clear-buttons">
       <span>Tree:</span>
-      <SaveButton disabled={props.treeIsRunning} modelName={props.modelName} modelSettings={props.modelSettings} />
-      <LoadButton disabled={props.treeIsRunning} importSettings={props.importSettings} />
-      <ClearButton disabled={props.treeIsRunning} />
+      <SaveButton
+        disabled={props.store.running}
+        store={props.store}
+        modelName={props.modelName}
+        modelSettings={props.modelSettings}
+      />
+      <LoadButton disabled={props.store.running} importSettings={props.importSettings} />
+      <ClearButton disabled={props.store.running} />
     </div>
   );
 }
 
 function SaveButton(props: {
+  store: TreeStore.State;
   disabled: boolean;
   modelName: string;
   modelSettings: TreeStore.SerializedModelSettings;
@@ -713,7 +719,7 @@ function SaveButton(props: {
     <button
       disabled={props.disabled}
       onClick={() => {
-        TreeStore.saveTree(props.modelName, props.modelSettings);
+        TreeStore.saveTree(props.store, props.modelName, props.modelSettings);
       }}
     >
       Save
