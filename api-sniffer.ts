@@ -134,6 +134,7 @@ async function _sniffApi(baseUrl: string, apiKey: string): Promise<ApiInfo> {
         provider: "openai",
         supportsLogprobs: "yes",
         supportsPrefill: "no",
+        extraWarning: "Long live gpt-3.5-turbo! 🤖"
       };
     } else if (models.includes("deepseek-chat")) {
       return {

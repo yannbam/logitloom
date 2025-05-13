@@ -163,7 +163,19 @@ export function run(
   const client = new OpenAI({
     baseURL: opts.baseUrl,
     apiKey: opts.apiKey,
-    dangerouslyAllowBrowser: true
+    dangerouslyAllowBrowser: true,
+    // Remove headers that can cause CORS issues with non-openai providers
+    // TODO remove only when provider !== openai, but nullifying headers with .create(request, { headers: nullifiedHeaders}) didn't work
+    defaultHeaders: {
+    'x-stainless-arch': null,
+    'x-stainless-lang': null,
+    'x-stainless-os': null,
+    'x-stainless-package-version': null,
+    'x-stainless-retry-count': null,
+    'x-stainless-runtime': null,
+    'x-stainless-runtime-version': null,
+    'x-stainless-timeout': null,
+    }
   });
 
   updateState((state) => ({ ...state, running: true }));
