@@ -37,15 +37,43 @@ export async function sniffApi(baseUrl: string, apiKey: string): Promise<ApiInfo
 }
 
 async function _sniffApi(baseUrl: string, apiKey: string): Promise<ApiInfo> {
-  // we could just check baseUrl here, but it might be proxied.
-  const response = await fetch(`${baseUrl}/models`, {
-    headers: {
+  let response;
+  let lastError: any;
+
+  // try different headers in case of CORS issues
+  const headerConfigs = [
+    {
       Authorization: `Bearer ${apiKey}`,
       "x-api-key": apiKey,
       "anthropic-dangerous-direct-browser-access": "true",
     },
-    redirect: "follow",
-  });
+    {
+      Authorization: `Bearer ${apiKey}`,
+      "x-api-key": apiKey,
+    },
+    {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  ];
+
+  for (const headers of headerConfigs) {
+    try {
+      response = await fetch(`${baseUrl}/models`, {
+        headers,
+        redirect: "follow",
+      });
+      break; // Success, exit loop
+    } catch (e) {
+      console.log(`try again with different header`);
+      lastError = e;
+      continue; // Try next header config
+    }
+  }
+
+  if (!response) {
+    throw lastError; // Propagate the last fetch error to sniffApi
+  }
+
   console.log(`/models response for ${baseUrl}:`, response);
 
   if (response.status === 200) {
@@ -112,6 +140,7 @@ async function _sniffApi(baseUrl: string, apiKey: string): Promise<ApiInfo> {
     }
   } else {
     const error = await response.text();
+
     if (error.includes("anthropic-version")) {
       return {
         provider: "anthropic",
