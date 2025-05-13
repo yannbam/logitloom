@@ -2,9 +2,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   // Enable React JSX transformation
-  esbuild: {
-    jsxInject: `import React from 'react'`,
-  },
+  esbuild: {},
   // Base path for production build (adjust if needed)
   base: './',
   // Configure the build
