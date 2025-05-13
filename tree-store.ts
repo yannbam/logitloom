@@ -163,18 +163,7 @@ export function run(
   const client = new OpenAI({
     baseURL: opts.baseUrl,
     apiKey: opts.apiKey,
-    dangerouslyAllowBrowser: true,
-    // Remove the problematic headers that cause CORS issues
-    defaultHeaders: {
-      'x-stainless-arch': null,
-      'x-stainless-lang': null,
-      'x-stainless-os': null,
-      'x-stainless-package-version': null,
-      'x-stainless-retry-count': null,
-      'x-stainless-runtime': null,
-      'x-stainless-runtime-version': null,
-      'x-stainless-timeout': null,
-    }
+    dangerouslyAllowBrowser: true
   });
 
   updateState((state) => ({ ...state, running: true }));
