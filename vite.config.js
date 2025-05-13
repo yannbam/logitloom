@@ -18,6 +18,7 @@ export default defineConfig({
   // Use ESM for all outputs
   server: {
     // Use open flag to automatically open browser
-    open: true,
+    open: false
+    // open: '/usr/bin/google-chrome'
   }
 });
